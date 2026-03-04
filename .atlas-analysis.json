@@ -1,0 +1,83 @@
+{
+  "projectType": "frontend",
+  "projectName": "Ritam Saha Portfolio",
+  "projectDescription": "A modern, responsive portfolio website built with React, Vite, Tailwind CSS, and Framer Motion showcasing skills, projects, and experience.",
+  "theme": "willow",
+  "primaryColor": "#040404",
+  "lightColor": null,
+  "darkColor": null,
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Components",
+        "pages": [
+          "components/overview",
+          "components/hero",
+          "components/navbar",
+          "components/about",
+          "components/skills",
+          "components/education",
+          "components/projects",
+          "components/work",
+          "components/contact",
+          "components/theme-toggle",
+          "components/social-dock"
+        ]
+      },
+      {
+        "group": "Customization",
+        "pages": [
+          "customization/theme",
+          "customization/styling",
+          "customization/content"
+        ]
+      },
+      {
+        "group": "Integrations",
+        "pages": [
+          "integrations/emailjs",
+          "integrations/animations"
+        ]
+      },
+      {
+        "group": "Deployment",
+        "pages": [
+          "deployment/build",
+          "deployment/hosting"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Dark/light theme toggle with smooth transitions",
+    "Responsive design with mobile-first approach",
+    "Framer Motion animations with scroll triggers",
+    "EmailJS contact form integration",
+    "Interactive parallax tilt effects",
+    "Typewriter effect in hero section",
+    "Shadcn/ui component library",
+    "Tailwind CSS utility-first styling"
+  ],
+  "publicApiSurface": [
+    "Hero - Landing section with typewriter effect",
+    "Navbar - Navigation bar with mobile menu",
+    "About - About section component",
+    "Skills - Skills showcase with tech icons",
+    "Education - Education timeline component",
+    "Projects - Projects showcase section",
+    "Work - Work experience component",
+    "Contact - Contact form with EmailJS",
+    "ThemeToggle - Dark/light mode toggle",
+    "SocialDock - Social media links dock",
+    "ThemeContext - Theme state management context",
+    "SectionWrapper - HOC for section styling",
+    "Button - Shadcn/ui button component"
+  ]
+}
