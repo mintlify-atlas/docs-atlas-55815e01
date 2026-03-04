@@ -1,0 +1,350 @@
+---
+title: Theme Toggle Component
+description: Dark/light mode switcher with smooth circular reveal transition and sound effect
+---
+
+The ThemeToggle component provides an elegant way to switch between light and dark modes with a smooth circular reveal animation and optional sound effect.
+
+## Overview
+
+Key features:
+- Circular reveal transition using View Transition API
+- Animated sun/moon icons with rotation
+- Sound effect on toggle
+- Fixed positioning in bottom-right corner
+- Spring animation on mount
+- Hover and tap effects
+
+## Component Structure
+
+The ThemeToggle is a simple wrapper around the AnimatedThemeToggler:
+
+```jsx ThemeToggle.jsx
+import { AnimatedThemeToggler } from './ui/animated-theme-toggler';
+
+const ThemeToggle = () => {
+  return <AnimatedThemeToggler />;
+};
+
+export default ThemeToggle;
+```
+
+## AnimatedThemeToggler Component
+
+```jsx animated-theme-toggler.jsx
+import { useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { flushSync } from 'react-dom';
+import { useTheme } from '../../contexts/ThemeContext';
+import { toggleSound } from '../../assets';
+
+export function AnimatedThemeToggler({ duration = 400 }) {
+  const { isDark, toggleTheme } = useTheme();
+  const buttonRef = useRef(null);
+
+  const handleToggle = useCallback(async () => {
+    // Play sound effect
+    const audio = new Audio(toggleSound);
+    audio.volume = 0.5;
+    audio.play().catch(() => {});
+
+    // Check for View Transition API support
+    if (!buttonRef.current || !document.startViewTransition) {
+      toggleTheme();
+      return;
+    }
+
+    // Start view transition
+    await document.startViewTransition(() => {
+      flushSync(() => {
+        toggleTheme();
+      });
+    }).ready;
+
+    // Calculate circular reveal animation
+    const { top, left, width, height } = buttonRef.current.getBoundingClientRect();
+    const x = left + width / 2;
+    const y = top + height / 2;
+    const maxRadius = Math.hypot(
+      Math.max(left, window.innerWidth - left),
+      Math.max(top, window.innerHeight - top)
+    );
+
+    // Animate the transition
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${maxRadius}px at ${x}px ${y}px)`,
+        ],
+      },
+      {
+        duration,
+        easing: 'ease-in-out',
+        pseudoElement: '::view-transition-new(root)',
+      }
+    );
+  }, [toggleTheme, duration]);
+
+  return (
+    <motion.button
+      ref={buttonRef}
+      onClick={handleToggle}
+      className="fixed bottom-8 right-8 z-50 w-14 h-14 
+        rounded-full bg-slate-700 dark:bg-slate-700 shadow-lg 
+        flex items-center justify-center 
+        border-2 border-slate-600 dark:border-slate-600"
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+    >
+      <AnimatePresence mode="wait">
+        {isDark ? (
+          <motion.svg
+            key="sun"
+            initial={{ y: -20, opacity: 0, rotate: -90 }}
+            animate={{ y: 0, opacity: 1, rotate: 0 }}
+            exit={{ y: 20, opacity: 0, rotate: 90 }}
+            transition={{ duration: 0.2 }}
+            className="w-6 h-6 text-yellow-300"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+          </motion.svg>
+        ) : (
+          <motion.svg
+            key="moon"
+            initial={{ y: 20, opacity: 0, rotate: 90 }}
+            animate={{ y: 0, opacity: 1, rotate: 0 }}
+            exit={{ y: -20, opacity: 0, rotate: -90 }}
+            transition={{ duration: 0.2 }}
+            className="w-6 h-6 text-slate-200"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </motion.svg>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  );
+}
+```
+
+## Key Features Explained
+
+### 1. View Transition API
+
+Creates a smooth circular reveal effect:
+
+```javascript
+const { top, left, width, height } = buttonRef.current.getBoundingClientRect();
+const x = left + width / 2;  // Center X
+const y = top + height / 2;  // Center Y
+
+// Calculate maximum radius to cover entire viewport
+const maxRadius = Math.hypot(
+  Math.max(left, window.innerWidth - left),
+  Math.max(top, window.innerHeight - top)
+);
+
+// Animate from 0 to max radius
+document.documentElement.animate(
+  {
+    clipPath: [
+      `circle(0px at ${x}px ${y}px)`,
+      `circle(${maxRadius}px at ${x}px ${y}px)`,
+    ],
+  },
+  {
+    duration: 400,
+    easing: 'ease-in-out',
+    pseudoElement: '::view-transition-new(root)',
+  }
+);
+```
+
+<Info>
+The View Transition API is a modern feature. The component falls back to instant theme change if not supported.
+</Info>
+
+### 2. Sound Effect
+
+```javascript
+const audio = new Audio(toggleSound);
+audio.volume = 0.5;
+audio.play().catch(() => {});
+```
+
+<Note>
+The `.catch(() => {})` prevents errors if the browser blocks autoplay.
+</Note>
+
+### 3. Icon Animations
+
+Icons animate in/out with rotation:
+
+```jsx
+{isDark ? (
+  <motion.svg
+    key="sun"
+    initial={{ y: -20, opacity: 0, rotate: -90 }}
+    animate={{ y: 0, opacity: 1, rotate: 0 }}
+    exit={{ y: 20, opacity: 0, rotate: 90 }}
+    transition={{ duration: 0.2 }}
+  >
+    {/* Sun icon */}
+  </motion.svg>
+) : (
+  <motion.svg
+    key="moon"
+    initial={{ y: 20, opacity: 0, rotate: 90 }}
+    animate={{ y: 0, opacity: 1, rotate: 0 }}
+    exit={{ y: -20, opacity: 0, rotate: -90 }}
+    transition={{ duration: 0.2 }}
+  >
+    {/* Moon icon */}
+  </motion.svg>
+)}
+```
+
+### 4. Button Animations
+
+```jsx
+<motion.button
+  whileHover={{ scale: 1.1 }}      // Grows on hover
+  whileTap={{ scale: 0.9 }}        // Shrinks on click
+  initial={{ scale: 0, opacity: 0 }} // Starts hidden
+  animate={{ scale: 1, opacity: 1 }} // Animates in
+  transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+>
+```
+
+## Theme Context Integration
+
+The component uses a ThemeContext:
+
+```jsx
+const { isDark, toggleTheme } = useTheme();
+```
+
+Typical ThemeContext implementation:
+
+```jsx ThemeContext.jsx
+import { createContext, useContext, useState, useEffect } from 'react';
+
+const ThemeContext = createContext();
+
+export const ThemeProvider = ({ children }) => {
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved === 'dark' || 
+      (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  });
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDark]);
+
+  const toggleTheme = () => setIsDark(!isDark);
+
+  return (
+    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+export const useTheme = () => useContext(ThemeContext);
+```
+
+## Positioning
+
+```css
+fixed bottom-8 right-8 z-50
+```
+
+- `fixed` - Stays in place while scrolling
+- `bottom-8 right-8` - 32px from bottom-right corner
+- `z-50` - High z-index to stay above other content
+
+## Browser Support
+
+<Tabs>
+  <Tab title="Modern Browsers">
+    Full support with circular reveal animation
+    - Chrome 111+
+    - Edge 111+
+    - Safari 18+
+  </Tab>
+  <Tab title="Older Browsers">
+    Instant theme change without animation
+    - Falls back gracefully
+    - Still fully functional
+  </Tab>
+</Tabs>
+
+## Customization Options
+
+### Change Duration
+
+```jsx
+<AnimatedThemeToggler duration={600} />
+```
+
+### Change Position
+
+```jsx
+className="fixed top-8 left-8 z-50 ..."
+```
+
+### Change Colors
+
+```jsx
+className="... bg-blue-600 dark:bg-blue-800 
+  border-blue-500 dark:border-blue-600"
+```
+
+### Disable Sound
+
+Remove the audio playback:
+
+```javascript
+const handleToggle = useCallback(async () => {
+  // Remove these lines:
+  // const audio = new Audio(toggleSound);
+  // audio.volume = 0.5;
+  // audio.play().catch(() => {});
+  
+  // Rest of the code...
+}, [toggleTheme, duration]);
+```
+
+## Dependencies
+
+- `framer-motion` - Icon animations
+- `react-dom` - flushSync for View Transition API
+- Custom ThemeContext - Theme state management
+
+## Accessibility
+
+- Keyboard accessible (button element)
+- Visual feedback on hover/focus
+- Semantic button element
+- Consider adding aria-label:
+
+```jsx
+<motion.button
+  aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+  // ... rest of props
+>
+```

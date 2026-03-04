@@ -1,0 +1,219 @@
+---
+title: 'Building for Production'
+description: 'Learn how to build your portfolio for production deployment'
+---
+
+## Overview
+
+This portfolio uses Vite as its build tool, which provides fast builds and optimized production bundles. The build process compiles your React application, optimizes assets, and generates static files ready for deployment.
+
+## Build Command
+
+The production build is configured in `package.json`:
+
+```json package.json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}
+```
+
+<Steps>
+  <Step title="Run the build command">
+    Execute the build script to create production-ready files:
+    
+    ```bash
+    npm run build
+    ```
+    
+    This command will:
+    - Compile React components and JavaScript
+    - Process and optimize CSS (Tailwind CSS)
+    - Bundle and minify all assets
+    - Generate optimized image formats
+    - Create source maps for debugging
+  </Step>
+
+  <Step title="Verify build output">
+    After a successful build, you'll find the production files in the `dist/` directory:
+    
+    ```
+    dist/
+    ├── assets/
+    │   ├── index-[hash].js
+    │   ├── index-[hash].css
+    │   └── [images and other assets]
+    └── index.html
+    ```
+  </Step>
+
+  <Step title="Test the build locally">
+    Preview the production build before deployment:
+    
+    ```bash
+    npm run preview
+    ```
+    
+    This starts a local server serving the built files, typically at `http://localhost:4173`
+  </Step>
+</Steps>
+
+## Build Configuration
+
+The build is configured in `vite.config.js`:
+
+```javascript vite.config.js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+})
+```
+
+### Key Features
+
+- **React Plugin**: Enables Fast Refresh and JSX transformation
+- **Path Aliases**: `@` resolves to `./src` for cleaner imports
+- **Automatic Optimization**: Vite handles code splitting and tree shaking
+
+## Build Optimization
+
+Vite automatically applies several optimizations:
+
+<CardGroup cols={2}>
+  <Card title="Code Splitting" icon="scissors">
+    Automatically splits code by routes and dynamic imports for faster initial load
+  </Card>
+  
+  <Card title="Tree Shaking" icon="tree">
+    Removes unused code from the final bundle
+  </Card>
+  
+  <Card title="Minification" icon="compress">
+    Minifies JavaScript and CSS using esbuild
+  </Card>
+  
+  <Card title="Asset Optimization" icon="image">
+    Optimizes images and inlines small assets as base64
+  </Card>
+</CardGroup>
+
+## Advanced Build Options
+
+### Custom Output Directory
+
+Change the output directory by updating `vite.config.js`:
+
+```javascript vite.config.js
+export default defineConfig({
+  build: {
+    outDir: 'build', // Default is 'dist'
+  },
+})
+```
+
+### Base URL for Subdirectory Deployment
+
+If deploying to a subdirectory (e.g., `https://example.com/portfolio/`):
+
+```javascript vite.config.js
+export default defineConfig({
+  base: '/portfolio/',
+})
+```
+
+### Source Maps
+
+Control source map generation:
+
+```javascript vite.config.js
+export default defineConfig({
+  build: {
+    sourcemap: true, // or 'inline' or 'hidden'
+  },
+})
+```
+
+<Note>
+  Source maps help with debugging in production but increase build size. Consider using `'hidden'` for production deployments.
+</Note>
+
+## Build Performance
+
+### Expected Build Times
+
+- **Initial Build**: 10-30 seconds (depending on project size)
+- **Subsequent Builds**: 5-15 seconds (with Vite's caching)
+
+### Optimization Tips
+
+<AccordionGroup>
+  <Accordion title="Reduce Bundle Size">
+    - Lazy load routes and components using React.lazy()
+    - Remove unused dependencies
+    - Use dynamic imports for heavy libraries
+    - Optimize images before importing
+  </Accordion>
+  
+  <Accordion title="Speed Up Build Times">
+    - Use Vite's dependency pre-bundling
+    - Minimize the number of plugins
+    - Leverage Vite's caching mechanisms
+    - Consider disabling source maps for faster builds
+  </Accordion>
+</AccordionGroup>
+
+## Common Build Issues
+
+<Warning>
+  Always test your production build locally using `npm run preview` before deploying to catch issues early.
+</Warning>
+
+### Issue: Build Fails with Memory Error
+
+**Solution**: Increase Node.js memory limit:
+
+```bash
+NODE_OPTIONS="--max-old-space-size=4096" npm run build
+```
+
+### Issue: Assets Not Loading
+
+**Problem**: Assets show 404 errors after deployment
+
+**Solution**: Check your `base` configuration in `vite.config.js` matches your deployment path.
+
+### Issue: Environment Variables Not Working
+
+**Problem**: Environment variables are `undefined` in production
+
+**Solution**: Ensure variables are prefixed with `VITE_` and properly set in your hosting platform. See the [Hosting Guide](/deployment/hosting#environment-variables).
+
+## Build Checklist
+
+Before deploying to production:
+
+- [ ] Run `npm run build` successfully
+- [ ] Test with `npm run preview`
+- [ ] Verify all environment variables are set
+- [ ] Check that all routes work correctly
+- [ ] Test contact form functionality
+- [ ] Verify responsive design on multiple devices
+- [ ] Check browser console for errors
+- [ ] Test loading performance (use Lighthouse)
+
+## Next Steps
+
+<Card title="Deploy Your Portfolio" icon="rocket" href="/deployment/hosting">
+  Learn how to deploy your built portfolio to popular hosting platforms
+</Card>

@@ -1,0 +1,401 @@
+---
+title: Social Dock Component
+description: Floating dock with animated social media icons and email link
+---
+
+The SocialDock component displays a macOS-style floating dock at the bottom of the page with social media links and an email button, featuring smooth animations and hover effects.
+
+## Overview
+
+Key features:
+- macOS-inspired dock design
+- Animated icon hover effects
+- Social media integration
+- Email link with separator
+- Fixed positioning at bottom center
+- Dark mode support
+- Custom SVG icons
+
+## Component Structure
+
+```jsx SocialDock.jsx
+import { socialsData, Email } from "@/constants"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { Dock, DockIcon } from "@/components/ui/dock"
+
+const Icons = {
+  linkedin: (props) => <svg>...</svg>,
+  github: (props) => <svg>...</svg>,
+  twitter: (props) => <svg>...</svg>,
+  instagram: (props) => <svg>...</svg>,
+  facebook: (props) => <svg>...</svg>,
+  email: (props) => <svg>...</svg>,
+}
+
+const socialIconMap = {
+  LinkedIn: Icons.linkedin,
+  GitHub: Icons.github,
+  Twitter: Icons.twitter,
+  Instagram: Icons.instagram,
+  Facebook: Icons.facebook,
+}
+
+export function SocialDock() {
+  return (
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40">
+      <Dock>
+        {socialsData.map((social) => {
+          const IconComponent = socialIconMap[social.name]
+          return (
+            <DockIcon key={social.name}>
+              <a
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.name}
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "icon" }),
+                  "size-12 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700"
+                )}
+              >
+                <IconComponent className="size-5 text-navy-700 dark:text-slate-300" />
+              </a>
+            </DockIcon>
+          )
+        })}
+        <Separator orientation="vertical" className="h-8 my-auto" />
+        <DockIcon>
+          <a
+            href={`mailto:${Email}`}
+            aria-label="Send Email"
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "icon" }),
+              "size-12 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700"
+            )}
+          >
+            <Icons.email className="size-5 text-navy-700 dark:text-slate-300" />
+          </a>
+        </DockIcon>
+      </Dock>
+    </div>
+  )
+}
+```
+
+## Social Media Icons
+
+Custom SVG icons for each platform:
+
+### LinkedIn Icon
+
+```jsx
+linkedin: (props) => (
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+  </svg>
+)
+```
+
+### GitHub Icon
+
+```jsx
+github: (props) => (
+  <svg viewBox="0 0 438.549 438.549" {...props}>
+    <path fill="currentColor" d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8-33.598-19.607-70.277-29.408-110.063-29.408-39.781 0-76.472 9.804-110.063 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.854 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.419-1.996..." />
+  </svg>
+)
+```
+
+### Email Icon
+
+```jsx
+email: (props) => (
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path fill="currentColor" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+  </svg>
+)
+```
+
+<Note>
+All icons use `currentColor` for fill, allowing easy color customization via CSS.
+</Note>
+
+## Social Data Configuration
+
+Define social links in `constants.js`:
+
+```javascript constants.js
+export const socialsData = [
+  {
+    name: "LinkedIn",
+    url: "https://linkedin.com/in/yourprofile"
+  },
+  {
+    name: "GitHub",
+    url: "https://github.com/yourusername"
+  },
+  {
+    name: "Twitter",
+    url: "https://twitter.com/yourhandle"
+  },
+  {
+    name: "Instagram",
+    url: "https://instagram.com/yourusername"
+  },
+  {
+    name: "Facebook",
+    url: "https://facebook.com/yourprofile"
+  },
+];
+
+export const Email = "your.email@example.com";
+```
+
+## Icon Mapping
+
+Maps social network names to icon components:
+
+```javascript
+const socialIconMap = {
+  LinkedIn: Icons.linkedin,
+  GitHub: Icons.github,
+  Twitter: Icons.twitter,
+  Instagram: Icons.instagram,
+  Facebook: Icons.facebook,
+}
+
+// Usage
+const IconComponent = socialIconMap[social.name]
+```
+
+## Dock Component
+
+The base Dock component provides the container styling:
+
+```jsx dock.jsx
+export const Dock = ({ children, className }) => (
+  <div className={cn(
+    "flex items-center gap-2 p-2 
+    bg-white/80 dark:bg-slate-800/80 
+    backdrop-blur-lg rounded-full 
+    border border-slate-200 dark:border-slate-700 
+    shadow-lg",
+    className
+  )}>
+    {children}
+  </div>
+);
+
+export const DockIcon = ({ children, className }) => (
+  <div className={cn(
+    "flex items-center justify-center",
+    className
+  )}>
+    {children}
+  </div>
+);
+```
+
+## Positioning
+
+```css
+fixed bottom-8 left-1/2 -translate-x-1/2 z-40
+```
+
+- `fixed` - Stays in viewport
+- `bottom-8` - 32px from bottom
+- `left-1/2 -translate-x-1/2` - Horizontally centered
+- `z-40` - Above most content but below modals
+
+## Button Styling
+
+Uses shadcn/ui button variants:
+
+```jsx
+className={cn(
+  buttonVariants({ variant: "ghost", size: "icon" }),
+  "size-12 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700"
+)}
+```
+
+<Info>
+The `cn` utility merges Tailwind classes intelligently, handling conflicts.
+</Info>
+
+## Separator
+
+Divides social icons from email:
+
+```jsx
+<Separator orientation="vertical" className="h-8 my-auto" />
+```
+
+Typical Separator component:
+
+```jsx separator.jsx
+export const Separator = ({ orientation = "horizontal", className }) => (
+  <div
+    className={cn(
+      "bg-slate-200 dark:bg-slate-700",
+      orientation === "horizontal" ? "h-px w-full" : "w-px h-full",
+      className
+    )}
+  />
+);
+```
+
+## Link Attributes
+
+```jsx
+<a
+  href={social.url}
+  target="_blank"              // Opens in new tab
+  rel="noopener noreferrer"    // Security best practice
+  aria-label={social.name}     // Accessibility
+>
+```
+
+<Warning>
+Always use `rel="noopener noreferrer"` with `target="_blank"` for security.
+</Warning>
+
+## Hover Effects
+
+```css
+hover:bg-slate-100 dark:hover:bg-slate-700
+```
+
+Each icon button:
+- Changes background on hover
+- Smooth color transition
+- Maintains circular shape
+- Different colors for light/dark mode
+
+## Responsive Behavior
+
+The dock is responsive by default:
+- Icons scale appropriately
+- Dock width adjusts to content
+- Always centered horizontally
+- Fixed distance from bottom
+
+## Accessibility Features
+
+<CardGroup cols={2}>
+  <Card title="ARIA Labels">
+    Each link has descriptive aria-label
+    ```jsx
+    aria-label={social.name}
+    aria-label="Send Email"
+    ```
+  </Card>
+  <Card title="Keyboard Navigation">
+    All links are keyboard accessible
+    - Tab to navigate
+    - Enter to activate
+  </Card>
+</CardGroup>
+
+## Dark Mode Support
+
+<CodeGroup>
+```css Dock Container
+bg-white/80 dark:bg-slate-800/80
+border-slate-200 dark:border-slate-700
+```
+
+```css Icon Buttons
+hover:bg-slate-100 dark:hover:bg-slate-700
+text-navy-700 dark:text-slate-300
+```
+</CodeGroup>
+
+## Adding New Social Icons
+
+1. Add icon to Icons object:
+
+```jsx
+const Icons = {
+  // ... existing icons
+  youtube: (props) => (
+    <svg viewBox="0 0 24 24" {...props}>
+      <path fill="currentColor" d="..." />
+    </svg>
+  ),
+}
+```
+
+2. Add to icon map:
+
+```javascript
+const socialIconMap = {
+  // ... existing mappings
+  YouTube: Icons.youtube,
+}
+```
+
+3. Add to constants:
+
+```javascript
+export const socialsData = [
+  // ... existing socials
+  {
+    name: "YouTube",
+    url: "https://youtube.com/c/yourchannel"
+  },
+];
+```
+
+## Email Link
+
+Separate from social icons with visual divider:
+
+```jsx
+<Separator orientation="vertical" className="h-8 my-auto" />
+<DockIcon>
+  <a href={`mailto:${Email}`} aria-label="Send Email">
+    <Icons.email className="size-5" />
+  </a>
+</DockIcon>
+```
+
+## Customization Ideas
+
+### Change Position
+
+```jsx
+// Top center
+className="fixed top-8 left-1/2 -translate-x-1/2 z-40"
+
+// Right side vertical
+className="fixed right-8 top-1/2 -translate-y-1/2 z-40"
+```
+
+### Add Tooltips
+
+```jsx
+<Tooltip>
+  <TooltipTrigger asChild>
+    <a href={social.url}>
+      <IconComponent />
+    </a>
+  </TooltipTrigger>
+  <TooltipContent>{social.name}</TooltipContent>
+</Tooltip>
+```
+
+### Change Icon Size
+
+```jsx
+className="size-6 text-navy-700 dark:text-slate-300"
+```
+
+## Dependencies
+
+- `@/constants` - Social data and email
+- `@/lib/utils` - cn utility for class merging
+- `@/components/ui/button` - Button variants
+- `@/components/ui/separator` - Separator component
+- `@/components/ui/dock` - Dock container components

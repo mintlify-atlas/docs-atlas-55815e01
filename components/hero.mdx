@@ -1,0 +1,219 @@
+---
+title: Hero Component
+description: Landing section with animated typing effect, profile image, and call-to-action buttons
+---
+
+The Hero component is the first section users see when visiting the portfolio. It features an animated typing effect, profile image with tilt interaction, and gradient background effects.
+
+## Overview
+
+The Hero component creates an engaging landing experience with:
+- Animated typing effect cycling through different roles
+- 3D tilt effect on the profile image
+- Animated gradient blobs in the background
+- Smooth fade-in animations using Framer Motion
+- Responsive layout that works on all screen sizes
+
+## Component Structure
+
+```jsx Hero.jsx
+import { home_page_text, words } from "@/constants";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Tilt from "react-parallax-tilt";
+
+const Home = () => {
+  const [wordIndex, setWordIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  
+  const typingSpeed = 150;
+  const erasingSpeed = 100;
+  const newWordDelay = 2000;
+
+  // Typing effect logic
+  useEffect(() => {
+    const handleTyping = () => {
+      if (!isDeleting && charIndex < words[wordIndex].length) {
+        setCharIndex((prev) => prev + 1);
+      } else if (isDeleting && charIndex > 0) {
+        setCharIndex((prev) => prev - 1);
+      } else if (!isDeleting && charIndex === words[wordIndex].length) {
+        setTimeout(() => setIsDeleting(true), newWordDelay);
+      } else if (isDeleting && charIndex === 0) {
+        setIsDeleting(false);
+        setWordIndex((prev) => (prev + 1) % words.length);
+      }
+    };
+
+    const typingTimer = setTimeout(
+      handleTyping, 
+      isDeleting ? erasingSpeed : typingSpeed
+    );
+
+    return () => clearTimeout(typingTimer);
+  }, [charIndex, isDeleting, wordIndex]);
+
+  return (
+    <section className="relative w-full min-h-[calc(100vh-40px)] mx-auto">
+      {/* Content */}
+    </section>
+  );
+};
+```
+
+## Key Features
+
+### 1. Typing Animation
+
+The typing effect cycles through an array of words defined in `constants.js`:
+
+```javascript
+const words = [
+  "Full Stack Developer",
+  "MERN Stack Developer",
+  "Problem Solver"
+];
+```
+
+The animation:
+- Types each character with a 150ms delay
+- Pauses for 2 seconds when complete
+- Erases with a 100ms delay
+- Cycles to the next word
+
+<Info>
+The typing speed, erasing speed, and delay are all configurable through constants.
+</Info>
+
+### 2. Animated Background Blobs
+
+```jsx
+<div className="pointer-events-none absolute inset-0 z-[-1]">
+  <div className="absolute -left-4 top-1/4 w-72 h-72 
+    bg-navy-200/30 dark:bg-slate-700/20 rounded-full 
+    mix-blend-multiply dark:mix-blend-lighten 
+    filter blur-xl opacity-70 animate-blob" />
+  <div className="absolute -right-4 top-1/4 w-72 h-72 
+    bg-blue-200/30 dark:bg-slate-600/20 rounded-full 
+    mix-blend-multiply dark:mix-blend-lighten 
+    filter blur-xl opacity-70 animate-blob animation-delay-2000" />
+  <div className="absolute -bottom-8 left-1/2 w-72 h-72 
+    bg-slate-200/30 dark:bg-slate-700/20 rounded-full 
+    mix-blend-multiply dark:mix-blend-lighten 
+    filter blur-xl opacity-70 animate-blob animation-delay-4000" />
+</div>
+```
+
+### 3. Profile Image with Tilt Effect
+
+```jsx
+<Tilt
+  tiltMaxAngleX={15}
+  tiltMaxAngleY={15}
+  perspective={1000}
+  scale={1.02}
+  transitionSpeed={1000}
+  gyroscope={true}
+  className="tilt-container"
+>
+  <img 
+    src="My_pic.jpg" 
+    alt="My Picture" 
+    className="relative w-56 sm:w-64 md:w-80 rounded-full 
+      border-4 border-navy-300/40 dark:border-slate-600/40 
+      shadow-xl hover:scale-105 transition-all duration-300" 
+  />
+</Tilt>
+```
+
+### 4. Call-to-Action Buttons
+
+```jsx
+<div className="flex items-center gap-4 mt-6">
+  <motion.a 
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    href="#contact" 
+    className="bg-navy-600 dark:bg-zinc-700 
+      hover:bg-navy-700 dark:hover:bg-zinc-800 
+      text-white font-semibold rounded-full px-6 py-3"
+  >
+    Hire Me
+  </motion.a>
+  <motion.a 
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    href="#contact"
+    className="border-2 border-navy-600 dark:border-zinc-500 
+      hover:bg-navy-800 dark:hover:bg-zinc-700 
+      hover:text-white text-navy-600 dark:text-zinc-300 
+      font-semibold rounded-full px-6 py-3"
+  >
+    Contact
+  </motion.a>
+</div>
+```
+
+## Responsive Behavior
+
+<CardGroup cols={2}>
+  <Card title="Desktop" icon="desktop">
+    - Two-column layout with text on left, image on right
+    - Large typography (5xl to 7xl)
+    - Full tilt effect enabled
+  </Card>
+  <Card title="Mobile" icon="mobile">
+    - Stacked layout with image first, then text
+    - Smaller typography (optimized for mobile)
+    - Touch-friendly button sizes
+  </Card>
+</CardGroup>
+
+## Animation Configuration
+
+Framer Motion variants used:
+
+```jsx
+// Text content
+<motion.div 
+  initial={{ opacity: 0, x: -50 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.8 }}
+>
+
+// Profile image
+<motion.div 
+  initial={{ opacity: 0, x: 50 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.8 }}
+>
+```
+
+## Dark Mode Support
+
+The component fully supports dark mode with specific color schemes:
+
+<CodeGroup>
+```css Light Mode
+text-navy-900
+bg-navy-600
+border-navy-300
+```
+
+```css Dark Mode
+text-slate-100
+bg-zinc-700
+border-slate-600
+```
+</CodeGroup>
+
+## Dependencies
+
+- `framer-motion` - Animation library
+- `react-parallax-tilt` - 3D tilt effect
+- `@/constants` - Text content and configuration
+
+<Note>
+Make sure to define the `words` array and `home_page_text` in your constants file.
+</Note>

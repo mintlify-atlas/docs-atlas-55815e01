@@ -1,0 +1,606 @@
+---
+title: Content Customization
+description: Update personal information, services, projects, tech stack, and other content
+---
+
+## Overview
+
+All portfolio content is centralized in `src/constants/index.js`, making it easy to update your personal information, services, projects, and tech stack without diving into component code.
+
+## Constants Structure
+
+The constants file exports all customizable content:
+
+```js src/constants/index.js
+import { Prompt, Software, Competitive, Computational } from "@/assets";
+
+export {
+  socialsData,
+  words,
+  navLinks,
+  services,
+  techStack,
+  home_page_text,
+  about_page_text,
+  Work_page_text,
+  Email
+};
+```
+
+## Personal Information
+
+### Hero Section Words
+
+The rotating text in the hero section:
+
+```js src/constants/index.js
+const words = [
+  "Software Developer",
+  "Problem Solver",
+  "MERN Stack Developer",
+  "Context-Prompt Engineer",
+];
+```
+
+<Steps>
+
+### Update Your Titles
+
+Replace with your own professional titles:
+
+```js
+const words = [
+  "Full-Stack Developer",
+  "UI/UX Designer",
+  "Cloud Architect",
+  "DevOps Engineer",
+];
+```
+
+### Add More Titles
+
+The array accepts any number of items:
+
+```js
+const words = [
+  "Frontend Developer",
+  "React Specialist",
+  "TypeScript Expert",
+  "Open Source Contributor",
+  "Tech Writer",
+  "Community Builder",
+];
+```
+
+</Steps>
+
+### Contact Email
+
+Set your contact email address:
+
+```js src/constants/index.js
+const Email = "ritamsaha75579@gmail.com";
+```
+
+**Update to your email:**
+
+```js
+const Email = "your.email@example.com";
+```
+
+## Social Media Links
+
+Define your social media profiles:
+
+```js src/constants/index.js
+const socialsData = [
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/in/ritamsaha137",
+    icon: "bx bxl-linkedin"
+  },
+  {
+    name: "GitHub",
+    url: "https://github.com/Ritam369",
+    icon: "bx bxl-github"
+  },
+  {
+    name: "Twitter",
+    url: "https://x.com/saharitam963",
+    icon: "bx bxl-twitter"
+  },
+];
+```
+
+### Customizing Social Links
+
+<CodeGroup>
+
+```js Add More Platforms
+const socialsData = [
+  {
+    name: "LinkedIn",
+    url: "https://linkedin.com/in/yourprofile",
+    icon: "bx bxl-linkedin"
+  },
+  {
+    name: "GitHub",
+    url: "https://github.com/yourusername",
+    icon: "bx bxl-github"
+  },
+  {
+    name: "Twitter",
+    url: "https://twitter.com/yourhandle",
+    icon: "bx bxl-twitter"
+  },
+  {
+    name: "Instagram",
+    url: "https://instagram.com/yourhandle",
+    icon: "bx bxl-instagram"
+  },
+  {
+    name: "YouTube",
+    url: "https://youtube.com/@yourchannel",
+    icon: "bx bxl-youtube"
+  },
+  {
+    name: "Dev.to",
+    url: "https://dev.to/yourusername",
+    icon: "bx bxl-dev-to"
+  },
+];
+```
+
+```js Minimal Setup
+const socialsData = [
+  {
+    name: "GitHub",
+    url: "https://github.com/yourusername",
+    icon: "bx bxl-github"
+  },
+  {
+    name: "Email",
+    url: "mailto:your.email@example.com",
+    icon: "bx bx-envelope"
+  },
+];
+```
+
+</CodeGroup>
+
+<Tip>
+The portfolio uses [Boxicons](https://boxicons.com/). Browse the site to find icon class names for any platform. The format is always `bx bxl-{platform}`.
+</Tip>
+
+## Navigation Links
+
+Customize the navigation menu:
+
+```js src/constants/index.js
+const navLinks = [
+  {
+    id: "skills",
+    title: "Skills",
+  },
+  {
+    id: "education",
+    title: "Education",
+  },
+  {
+    id: "projects",
+    title: "Projects",
+  },
+  {
+    id: "contact",
+    title: "Contact",
+  },
+];
+```
+
+### Modifying Navigation
+
+```js Add or Remove Sections
+const navLinks = [
+  {
+    id: "about",           // Section ID (must match section)
+    title: "About",        // Display text
+  },
+  {
+    id: "skills",
+    title: "Skills",
+  },
+  {
+    id: "experience",      // New section
+    title: "Experience",
+  },
+  {
+    id: "projects",
+    title: "Projects",
+  },
+  {
+    id: "blog",            // New section
+    title: "Blog",
+  },
+  {
+    id: "contact",
+    title: "Contact",
+  },
+];
+```
+
+<Warning>
+The `id` field must match the `id` attribute of the corresponding section in your component for smooth scrolling to work correctly.
+</Warning>
+
+## Services Section
+
+Define your expertise and services:
+
+```js src/constants/index.js
+const services = [
+  {
+    title: "Problem Solving & Algorithms",
+    icon: Computational,
+    description: "Expert in data structures, algorithms, and computational problem-solving with strong analytical thinking."
+  },
+  {
+    title: "Competitive Programming",
+    icon: Competitive,
+    description: "Active competitive programmer with experience in coding contests and algorithmic challenges."
+  },
+  {
+    title: "AI & Prompt Engineering",
+    icon: Prompt,
+    description: "Skilled in AI prompt design, optimization, and working with large language models and AI tools."
+  },
+  {
+    title: "Full-Stack Development",
+    icon: Software,
+    description: "Proficient in modern web technologies including MERN stack, responsive design, and scalable applications."
+  },
+];
+```
+
+### Customizing Services
+
+<Steps>
+
+### Import Your Icons
+
+First, add your custom icons to the `src/assets` folder and import them:
+
+```js src/constants/index.js
+import { 
+  MyIcon1, 
+  MyIcon2, 
+  MyIcon3 
+} from "@/assets";
+```
+
+### Update Service Cards
+
+Modify the services array with your offerings:
+
+```js
+const services = [
+  {
+    title: "Frontend Development",
+    icon: MyIcon1,
+    description: "Building responsive, accessible, and performant user interfaces with modern frameworks."
+  },
+  {
+    title: "Backend Development",
+    icon: MyIcon2,
+    description: "Creating scalable APIs and server-side applications with Node.js, Python, or Go."
+  },
+  {
+    title: "Cloud Architecture",
+    icon: MyIcon3,
+    description: "Designing and deploying cloud-native applications on AWS, Azure, or GCP."
+  },
+];
+```
+
+### Adjust Number of Services
+
+You can have any number of services (2-6 works best visually):
+
+```js
+const services = [
+  {
+    title: "Service 1",
+    icon: Icon1,
+    description: "Description for service 1"
+  },
+  {
+    title: "Service 2",
+    icon: Icon2,
+    description: "Description for service 2"
+  },
+  // Add as many as needed
+];
+```
+
+</Steps>
+
+## Tech Stack
+
+Display your technical skills with icon badges:
+
+```js src/constants/index.js
+const techStack = [
+  "C", 
+  "Java", 
+  "html", 
+  "css", 
+  "js", 
+  "nodejs", 
+  "Expressjs", 
+  "React", 
+  "Tailwind", 
+  "Mysql", 
+  "Mongodb", 
+  "VScode", 
+  "Vim", 
+  "Helix", 
+  "Git", 
+  "Nix", 
+  "Ubuntu"
+].map(name => ({
+  name,
+  imageUrl: `https://go-skill-icons.vercel.app/api/icons?i=${name.toLowerCase()}`
+}));
+```
+
+### Updating Your Tech Stack
+
+<CodeGroup>
+
+```js Frontend Focus
+const techStack = [
+  "React",
+  "TypeScript",
+  "Next.js",
+  "Tailwind",
+  "Vue",
+  "Sass",
+  "Webpack",
+  "Vite",
+  "Jest",
+  "Figma",
+].map(name => ({
+  name,
+  imageUrl: `https://go-skill-icons.vercel.app/api/icons?i=${name.toLowerCase()}`
+}));
+```
+
+```js Full-Stack Setup
+const techStack = [
+  "TypeScript",
+  "React",
+  "Node.js",
+  "Express",
+  "PostgreSQL",
+  "MongoDB",
+  "Redis",
+  "Docker",
+  "AWS",
+  "GraphQL",
+  "Git",
+].map(name => ({
+  name,
+  imageUrl: `https://go-skill-icons.vercel.app/api/icons?i=${name.toLowerCase()}`
+}));
+```
+
+```js DevOps/Cloud
+const techStack = [
+  "Docker",
+  "Kubernetes",
+  "AWS",
+  "Azure",
+  "Terraform",
+  "Jenkins",
+  "GitHub Actions",
+  "Prometheus",
+  "Linux",
+  "Bash",
+].map(name => ({
+  name,
+  imageUrl: `https://go-skill-icons.vercel.app/api/icons?i=${name.toLowerCase()}`
+}));
+```
+
+</CodeGroup>
+
+<Tip>
+The tech stack uses [Skill Icons API](https://github.com/tandpfun/skill-icons). Check their repository for the full list of supported technologies.
+</Tip>
+
+## Text Content
+
+### Home Page Introduction
+
+```js src/constants/index.js
+const home_page_text = "A 3rd-year Computer Science Engineering student at Techno Bengal Institute of Technology with a strong passion for problem-solving, algorithms, and emerging technologies...";
+```
+
+**Customize your introduction:**
+
+```js
+const home_page_text = "I'm a passionate full-stack developer with 5 years of experience building modern web applications. I specialize in React, Node.js, and cloud technologies, helping businesses transform their ideas into scalable digital solutions.";
+```
+
+### About Page Content
+
+```js src/constants/index.js
+const about_page_text = "I am a dedicated Computer Science Engineering student with a strong foundation in software development, problem-solving, and modern web technologies...";
+```
+
+**Update with your background:**
+
+```js
+const about_page_text = "I'm a self-taught developer who transitioned from graphic design to software engineering. My unique perspective helps me create applications that are not only functional but also beautiful and user-friendly. I believe in writing clean, maintainable code and continuous learning.";
+```
+
+### Work/Experience Page
+
+```js src/constants/index.js
+const Work_page_text = "As a fresher in the field, I have yet to gain industrial experience but am actively working on personal and academic projects...";
+```
+
+**Describe your experience:**
+
+```js
+const Work_page_text = "I currently work as a Senior Frontend Developer at Tech Corp, where I lead a team of 5 developers building enterprise SaaS applications. Previously, I spent 3 years at StartupXYZ developing their core product from scratch, which now serves over 100,000 users.";
+```
+
+## Complete Example
+
+Here's a complete before/after example:
+
+<CodeGroup>
+
+```js Before
+import { Prompt, Software, Competitive, Computational } from "@/assets";
+
+const words = [
+  "Software Developer",
+  "Problem Solver",
+];
+
+const Email = "ritamsaha75579@gmail.com";
+
+const socialsData = [
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/in/ritamsaha137",
+    icon: "bx bxl-linkedin"
+  },
+  {
+    name: "GitHub",
+    url: "https://github.com/Ritam369",
+    icon: "bx bxl-github"
+  },
+];
+
+const techStack = [
+  "React",
+  "Node.js",
+  "MongoDB",
+].map(name => ({
+  name,
+  imageUrl: `https://go-skill-icons.vercel.app/api/icons?i=${name.toLowerCase()}`
+}));
+```
+
+```js After
+import { WebIcon, MobileIcon, CloudIcon } from "@/assets";
+
+const words = [
+  "Full-Stack Developer",
+  "React Specialist",
+  "Cloud Architect",
+];
+
+const Email = "john.doe@example.com";
+
+const socialsData = [
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/in/johndoe",
+    icon: "bx bxl-linkedin"
+  },
+  {
+    name: "GitHub",
+    url: "https://github.com/johndoe",
+    icon: "bx bxl-github"
+  },
+  {
+    name: "Twitter",
+    url: "https://twitter.com/johndoe",
+    icon: "bx bxl-twitter"
+  },
+  {
+    name: "Portfolio",
+    url: "https://johndoe.com/blog",
+    icon: "bx bx-globe"
+  },
+];
+
+const techStack = [
+  "React",
+  "TypeScript",
+  "Next.js",
+  "Node.js",
+  "PostgreSQL",
+  "MongoDB",
+  "Docker",
+  "AWS",
+  "Kubernetes",
+].map(name => ({
+  name,
+  imageUrl: `https://go-skill-icons.vercel.app/api/icons?i=${name.toLowerCase()}`
+}));
+```
+
+</CodeGroup>
+
+## Best Practices
+
+<Tip>
+**Content Writing Tips:**
+- Keep descriptions concise and impactful
+- Use active voice ("I build" instead of "I have built")
+- Focus on achievements and outcomes
+- Include specific technologies and metrics when possible
+- Update content regularly as you grow
+</Tip>
+
+<Warning>
+**Common Mistakes:**
+- Don't use special characters that might break JSON parsing
+- Ensure all URLs are complete and valid
+- Test all social media links after updating
+- Keep icon imports consistent with usage
+- Don't forget to export new constants
+</Warning>
+
+## Exporting Constants
+
+Always export your constants at the end of the file:
+
+```js src/constants/index.js
+export {
+  socialsData,
+  words,
+  navLinks,
+  services,
+  techStack,
+  home_page_text,
+  about_page_text,
+  Work_page_text,
+  Email
+};
+```
+
+If you add new constants, include them in the export:
+
+```js
+export {
+  // ... existing exports
+  myNewConstant,
+  anotherConstant,
+};
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Theme Customization" icon="palette" href="/customization/theme">
+    Customize colors and dark/light mode
+  </Card>
+  <Card title="Styling Guide" icon="paintbrush" href="/customization/styling">
+    Modify Tailwind config and component styles
+  </Card>
+</CardGroup>

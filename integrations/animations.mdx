@@ -1,0 +1,492 @@
+---
+title: 'Framer Motion Animations'
+description: 'Understanding and customizing the animation system in your portfolio'
+---
+
+# Framer Motion Animations
+
+This portfolio uses [Framer Motion](https://www.framer.com/motion/) for declarative animations and [React Parallax Tilt](https://www.npmjs.com/package/react-parallax-tilt) for 3D tilt effects.
+
+## Dependencies
+
+```json package.json
+{
+  "dependencies": {
+    "framer-motion": "^11.11.9",
+    "react-parallax-tilt": "^1.7.248"
+  }
+}
+```
+
+## Motion Variants System
+
+The portfolio uses a centralized motion variants system defined in `src/utils/motion.js`. This provides reusable animation configurations throughout the application.
+
+### Available Variants
+
+#### textVariant
+
+Animates text with a spring effect from above:
+
+```js src/utils/motion.js
+export const textVariant = (delay) => {
+  return {
+    hidden: {
+      y: -50,
+      opacity: 0,
+    },
+    show: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        duration: 1.25,
+        delay: delay,
+      },
+    },
+  };
+};
+```
+
+**Usage:**
+```jsx
+import { motion } from "framer-motion";
+import { textVariant } from "@/utils/motion";
+
+<motion.div variants={textVariant(0.1)}>
+  <h2>Animated Heading</h2>
+</motion.div>
+```
+
+**Parameters:**
+- `delay` (number): Animation start delay in seconds (e.g., `0.1`, `0.5`)
+
+**Effect:** Element slides down from -50px with fade-in using a spring animation
+
+#### fadeIn
+
+Directional fade-in animation with customizable timing:
+
+```js src/utils/motion.js
+export const fadeIn = (direction, type, delay, duration) => {
+  return {
+    hidden: {
+      x: direction === "left" ? 100 : direction === "right" ? -100 : 0,
+      y: direction === "up" ? 100 : direction === "down" ? -100 : 0,
+      opacity: 0,
+    },
+    show: {
+      x: 0,
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: type,
+        delay: delay,
+        duration: duration,
+        ease: "easeOut",
+      },
+    },
+  };
+};
+```
+
+**Usage:**
+```jsx
+import { fadeIn } from "@/utils/motion";
+
+<motion.div variants={fadeIn("right", "", 0.2, 1)}>
+  <p>Fades in from the left side</p>
+</motion.div>
+```
+
+**Parameters:**
+- `direction` (string): `"left"`, `"right"`, `"up"`, `"down"`, or empty string for no directional movement
+- `type` (string): Animation type (`"spring"`, `"tween"`, or empty string)
+- `delay` (number): Animation start delay in seconds
+- `duration` (number): Animation duration in seconds
+
+**Effect:** Element slides from specified direction while fading in
+
+#### zoomIn
+
+Scale and fade animation for elements:
+
+```js src/utils/motion.js
+export const zoomIn = (delay, duration) => {
+  return {
+    hidden: {
+      scale: 0,
+      opacity: 0,
+    },
+    show: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        type: "tween",
+        delay: delay,
+        duration: duration,
+        ease: "easeOut",
+      },
+    },
+  };
+};
+```
+
+**Usage:**
+```jsx
+import { zoomIn } from "@/utils/motion";
+
+<motion.div variants={zoomIn(0.3, 0.8)}>
+  <img src="icon.png" alt="Icon" />
+</motion.div>
+```
+
+**Parameters:**
+- `delay` (number): Animation start delay in seconds
+- `duration` (number): Animation duration in seconds
+
+**Effect:** Element scales from 0 to 1 while fading in
+
+#### slideIn
+
+Full-screen slide animation:
+
+```js src/utils/motion.js
+export const slideIn = (direction, type, delay, duration) => {
+  return {
+    hidden: {
+      x: direction === "left" ? "-100%" : direction === "right" ? "100%" : 0,
+      y: direction === "up" ? "100%" : direction === "down" ? "100%" : 0,
+    },
+    show: {
+      x: 0,
+      y: 0,
+      transition: {
+        type: type,
+        delay: delay,
+        duration: duration,
+        ease: "easeOut",
+      },
+    },
+  };
+};
+```
+
+**Usage:**
+```jsx
+import { slideIn } from "@/utils/motion";
+
+<motion.div variants={slideIn("left", "tween", 0.2, 1)}>
+  <div>Slides in from off-screen</div>
+</motion.div>
+```
+
+**Parameters:**
+- `direction` (string): `"left"`, `"right"`, `"up"`, `"down"`
+- `type` (string): Animation type (`"spring"`, `"tween"`, etc.)
+- `delay` (number): Animation start delay in seconds
+- `duration` (number): Animation duration in seconds
+
+**Effect:** Element slides from completely off-screen (100% of viewport)
+
+#### staggerContainer
+
+Orchestrates sequential animations for child elements:
+
+```js src/utils/motion.js
+export const staggerContainer = (staggerChildren, delayChildren = 0) => {
+  return {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: staggerChildren,
+        delayChildren: delayChildren,
+      },
+    },
+  };
+};
+```
+
+**Usage:**
+```jsx
+import { staggerContainer, fadeIn } from "@/utils/motion";
+
+<motion.div
+  variants={staggerContainer(0.1, 0.2)}
+  initial="hidden"
+  animate="show"
+>
+  <motion.div variants={fadeIn("up", "", 0, 1)}>Item 1</motion.div>
+  <motion.div variants={fadeIn("up", "", 0, 1)}>Item 2</motion.div>
+  <motion.div variants={fadeIn("up", "", 0, 1)}>Item 3</motion.div>
+</motion.div>
+```
+
+**Parameters:**
+- `staggerChildren` (number): Delay between each child animation in seconds
+- `delayChildren` (number): Initial delay before first child animates (default: 0)
+
+**Effect:** Children animate sequentially with specified stagger delay
+
+## Real-World Example: Contact Component
+
+Here's how animations are applied in the Contact component:
+
+```jsx Contact.jsx
+import { motion } from "framer-motion";
+import { fadeIn, textVariant } from "@/utils/motion";
+
+// Section heading with spring animation
+<motion.div variants={textVariant(0.1)} className="relative z-10 text-center">
+  <p className="text-navy-600 dark:text-slate-400">Get in touch</p>
+  <h2 className="text-navy-900 dark:text-slate-100">Contact.</h2>
+</motion.div>
+
+// Left content slides in from right
+<motion.div
+  variants={fadeIn("right", "", 0.2, 1)}
+  className="flex flex-col space-y-6"
+>
+  <h3>Let's Connect</h3>
+  <p>I'm currently available for freelance work...</p>
+</motion.div>
+
+// Contact form slides in from left
+<motion.div
+  variants={fadeIn("left", "", 0.2, 1)}
+  className="bg-white/95 dark:bg-zinc-900/10 p-8 rounded-2xl"
+>
+  <form>{/* form fields */}</form>
+</motion.div>
+```
+
+## Animation States
+
+### Initial and Animate Props
+
+Framer Motion uses state-based animations:
+
+```jsx
+<motion.div
+  initial="hidden"    // Starting state
+  animate="show"      // Target state
+  variants={fadeIn("up", "", 0, 1)}
+>
+  Content
+</motion.div>
+```
+
+<Note>
+  When using variants, you typically define `hidden` and `show` states in your variant object, then reference them via `initial` and `animate` props.
+</Note>
+
+### Viewport-Based Animations
+
+Animate when elements enter the viewport:
+
+```jsx
+<motion.div
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, amount: 0.25 }}
+  variants={fadeIn("up", "", 0, 1)}
+>
+  Content animates when scrolled into view
+</motion.div>
+```
+
+**Options:**
+- `once: true` - Animate only once
+- `amount: 0.25` - Trigger when 25% of element is visible
+
+## Parallax Tilt Effects
+
+The portfolio uses `react-parallax-tilt` for 3D card effects:
+
+```jsx
+import Tilt from "react-parallax-tilt";
+
+<Tilt
+  tiltMaxAngleX={45}
+  tiltMaxAngleY={45}
+  scale={1.05}
+  transitionSpeed={450}
+>
+  <div className="card">3D Tilting Card</div>
+</Tilt>
+```
+
+### Common Tilt Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `tiltMaxAngleX` | number | 20 | Max tilt angle on X axis (degrees) |
+| `tiltMaxAngleY` | number | 20 | Max tilt angle on Y axis (degrees) |
+| `scale` | number | 1 | Scale factor on hover |
+| `transitionSpeed` | number | 250 | Transition speed (ms) |
+| `gyroscope` | boolean | false | Enable device orientation tilt |
+| `glareEnable` | boolean | false | Enable glare effect |
+
+## Performance Optimization
+
+### Layout Animations
+
+<Warning>
+  Avoid animating properties that trigger layout recalculation (width, height, top, left). Use `transform` and `opacity` instead for better performance.
+</Warning>
+
+**Good:**
+```jsx
+// Animates using GPU-accelerated transform
+<motion.div
+  initial={{ x: -100, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+/>
+```
+
+**Bad:**
+```jsx
+// Triggers layout recalculation
+<motion.div
+  initial={{ left: -100 }}
+  animate={{ left: 0 }}
+/>
+```
+
+### Will-Change Optimization
+
+Framer Motion automatically adds `will-change` for animated properties, but you can override:
+
+```jsx
+<motion.div
+  style={{ willChange: "transform" }}
+  animate={{ x: 100 }}
+/>
+```
+
+## Custom Animation Examples
+
+### Hover Animations
+
+```jsx
+<motion.button
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+>
+  Click Me
+</motion.button>
+```
+
+### Sequential List Animation
+
+```jsx
+<motion.ul
+  variants={staggerContainer(0.1, 0)}
+  initial="hidden"
+  animate="show"
+>
+  {items.map((item, index) => (
+    <motion.li
+      key={index}
+      variants={fadeIn("right", "", 0, 0.5)}
+    >
+      {item}
+    </motion.li>
+  ))}
+</motion.ul>
+```
+
+### Loading Spinner
+
+```jsx
+<motion.div
+  animate={{ rotate: 360 }}
+  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+  className="w-5 h-5 border-t-2 border-white rounded-full"
+/>
+```
+
+## Customizing Animations
+
+### Creating New Variants
+
+Add custom variants to `src/utils/motion.js`:
+
+```js
+export const bounceIn = (delay) => {
+  return {
+    hidden: {
+      scale: 0,
+      opacity: 0,
+    },
+    show: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        bounce: 0.5,
+        delay: delay,
+      },
+    },
+  };
+};
+```
+
+### Modifying Existing Variants
+
+Adjust timing and easing in the variant definitions:
+
+```js
+// Original
+transition: {
+  type: "spring",
+  duration: 1.25,
+  delay: delay,
+}
+
+// Modified for faster animation
+transition: {
+  type: "spring",
+  duration: 0.6,
+  delay: delay,
+  bounce: 0.3,
+}
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Animations not triggering">
+    - Ensure `initial` and `animate` props are set correctly
+    - Check that variants object has both `hidden` and `show` states
+    - Verify component is wrapped with motion component (e.g., `motion.div`)
+    - Check for CSS conflicts (especially `transform` or `transition`)
+  </Accordion>
+
+  <Accordion title="Choppy or laggy animations">
+    - Use `transform` and `opacity` instead of layout properties
+    - Reduce number of simultaneously animating elements
+    - Check browser DevTools Performance tab for bottlenecks
+    - Consider using `layoutId` for shared element transitions
+  </Accordion>
+
+  <Accordion title="Viewport animations not working">
+    - Ensure `whileInView` is used instead of `animate`
+    - Check viewport options: `viewport={{ once: true, amount: 0.25 }}`
+    - Verify element is actually scrollable and has viewport intersection
+  </Accordion>
+
+  <Accordion title="Stagger animations out of sync">
+    - Check that parent has `staggerContainer` variant
+    - Ensure children have matching variant keys (`hidden`, `show`)
+    - Verify parent has `initial` and `animate` props set
+  </Accordion>
+</AccordionGroup>
+
+## Additional Resources
+
+- [Framer Motion Documentation](https://www.framer.com/motion/)
+- [Framer Motion Examples](https://www.framer.com/motion/examples/)
+- [React Parallax Tilt](https://www.npmjs.com/package/react-parallax-tilt)
+- [Animation Performance Guide](https://web.dev/animations-guide/)

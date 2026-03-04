@@ -1,0 +1,108 @@
+---
+title: Components Overview
+description: Complete reference for all React components in the portfolio application
+---
+
+This portfolio application is built with modern React components using Framer Motion for animations and Tailwind CSS for styling. Below is a comprehensive overview of all available components.
+
+## Main Components
+
+The portfolio consists of several key section components that make up the complete user experience:
+
+### Hero Section
+- **[Hero](/components/hero)** - Landing page with animated typing effect and profile image
+
+### Navigation
+- **[Navbar](/components/navbar)** - Fixed navigation bar with smooth scrolling and mobile menu
+
+### Content Sections
+- **[About](/components/about)** - Personal introduction and technical expertise cards
+- **[Skills](/components/skills)** - Technology stack showcase with animated icons
+- **[Education](/components/education)** - Academic timeline with vertical progress line
+- **[Projects](/components/projects)** - Project cards with detailed descriptions and tech stacks
+- **[Work](/components/work)** - Work experience section
+- **[Contact](/components/contact)** - Contact form with EmailJS integration
+
+### UI Components
+- **[Theme Toggle](/components/theme-toggle)** - Dark/light mode switcher with smooth transitions
+- **[Social Dock](/components/social-dock)** - Floating dock with social media links
+
+## Common Features
+
+All components share these characteristics:
+
+<Info>
+- **Responsive Design** - Mobile-first approach with breakpoints for all screen sizes
+- **Dark Mode Support** - Complete theme support using React Context
+- **Smooth Animations** - Framer Motion integration for professional transitions
+- **Accessibility** - Semantic HTML and ARIA labels where appropriate
+</Info>
+
+## Component Architecture
+
+```tsx
+src/components/
+├── Hero.jsx              # Landing section
+├── Navbar.jsx            # Navigation
+├── About.jsx             # About section
+├── Skills.jsx            # Skills grid
+├── Education.jsx         # Education timeline
+├── Projects.jsx          # Projects showcase
+├── Work.jsx              # Work experience
+├── Contact.jsx           # Contact form
+├── ThemeToggle.jsx       # Theme switcher wrapper
+├── SocialDock.jsx        # Social media dock
+└── ui/                   # Reusable UI components
+    ├── animated-theme-toggler.jsx
+    ├── dock.jsx
+    └── button.jsx
+```
+
+## Higher-Order Components
+
+Many sections use the `SectionWrapper` HOC for consistent styling and animations:
+
+```jsx
+import { SectionWrapper } from '@/hooks';
+
+function MyComponent() {
+  return <div>Content</div>;
+}
+
+export default SectionWrapper(MyComponent, "section-id");
+```
+
+<Note>
+The `SectionWrapper` adds scroll-based animations, padding, and section IDs for navigation.
+</Note>
+
+## Styling Approach
+
+All components use:
+- **Tailwind CSS** for utility-first styling
+- **Custom CSS classes** defined in `styles.js`
+- **Dark mode variants** using `dark:` prefix
+- **Responsive utilities** (`sm:`, `md:`, `lg:`, `xl:`)
+
+## Animation Patterns
+
+Common animation variants from `utils/motion.js`:
+
+```javascript
+// Fade in from direction
+fadeIn(direction, type, delay, duration)
+
+// Text reveal animation
+textVariant(delay)
+
+// Stagger children
+staggerContainer(staggerChildren, delayChildren)
+```
+
+## Next Steps
+
+Explore individual component documentation for:
+- Detailed implementation
+- Props and configuration
+- Code examples
+- Customization options

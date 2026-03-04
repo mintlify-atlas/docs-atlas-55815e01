@@ -1,0 +1,311 @@
+---
+title: 'EmailJS Integration'
+description: 'Set up and configure EmailJS for contact form functionality in your portfolio'
+---
+
+# EmailJS Integration
+
+This portfolio uses [EmailJS](https://www.emailjs.com/) to handle contact form submissions without requiring a backend server. EmailJS sends emails directly from the client-side application.
+
+## Prerequisites
+
+<Steps>
+  <Step title="Create an EmailJS Account">
+    Sign up for a free account at [emailjs.com](https://www.emailjs.com/)
+  </Step>
+  
+  <Step title="Set up Email Service">
+    Connect your email service (Gmail, Outlook, etc.) in the EmailJS dashboard
+  </Step>
+  
+  <Step title="Create Email Template">
+    Design your email template with the required template variables
+  </Step>
+  
+  <Step title="Get API Keys">
+    Copy your Service ID, Template ID, and Public Key from the dashboard
+  </Step>
+</Steps>
+
+## Installation
+
+The EmailJS browser package is already included in the project dependencies:
+
+```json package.json
+{
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1"
+  }
+}
+```
+
+If you need to install it manually:
+
+```bash
+npm install @emailjs/browser
+```
+
+## Environment Configuration
+
+<Warning>
+  Never commit your EmailJS credentials to version control. Always use environment variables.
+</Warning>
+
+Create a `.env` file in your project root:
+
+```bash .env
+VITE_SEVICE_ID=your_service_id
+VITE_TEMPLATE_ID=your_template_id
+VITE_PUBLIC_KEY=your_public_key
+```
+
+<Note>
+  The environment variables must be prefixed with `VITE_` to be accessible in Vite applications.
+</Note>
+
+### Loading Environment Variables
+
+In your component, load the environment variables using Vite's `import.meta.env`:
+
+```jsx Contact.jsx
+const SERVICE_ID = import.meta.env.VITE_SEVICE_ID;
+const TEMPLATE_ID = import.meta.env.VITE_TEMPLATE_ID;
+const PUBLIC_KEY = import.meta.env.VITE_PUBLIC_KEY;
+```
+
+## Contact Form Implementation
+
+### Import EmailJS
+
+```jsx Contact.jsx
+import emailjs from "@emailjs/browser";
+```
+
+### Form State Management
+
+Set up React state to manage form data and loading state:
+
+```jsx Contact.jsx
+import { useState, useRef } from "react";
+
+const Contact = () => {
+  const formRef = useRef();
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+};
+```
+
+### Email Template Variables
+
+The template variables sent to EmailJS must match your template configuration:
+
+```jsx Contact.jsx
+const templateParams = {
+  from_name: form.name,        // Sender's name
+  to_name: "Ritam Saha",       // Recipient's name
+  from_email: form.email,      // Sender's email
+  to_email: Email,             // Your email constant
+  message: form.message,       // Message content
+};
+```
+
+<Note>
+  Make sure these variable names match exactly with your EmailJS template placeholders (e.g., `{{from_name}}`, `{{message}}`).
+</Note>
+
+### Form Submission Handler
+
+```jsx Contact.jsx
+const handleSubmit = (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  emailjs
+    .send(
+      SERVICE_ID,
+      TEMPLATE_ID,
+      {
+        from_name: form.name,
+        to_name: "Ritam Saha",
+        from_email: form.email,
+        to_email: Email,
+        message: form.message,
+      },
+      PUBLIC_KEY
+    )
+    .then(() => {
+      setLoading(false);
+      alert("Thank you. I will get back to you as soon as possible.");
+      setForm({
+        name: "",
+        email: "",
+        message: "",
+      });
+    })
+    .catch((error) => {
+      setLoading(false);
+      console.log(error);
+      alert("Something went wrong. Please try again.");
+    });
+};
+```
+
+### Form JSX Structure
+
+```jsx Contact.jsx
+<form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-8">
+  <label className="flex flex-col">
+    <span className="text-navy-900 dark:text-slate-100 font-medium mb-4">
+      Your Name
+    </span>
+    <input
+      type="text"
+      name="name"
+      value={form.name}
+      onChange={handleChange}
+      placeholder="What's your name?"
+      required
+    />
+  </label>
+
+  <label className="flex flex-col">
+    <span className="text-navy-900 dark:text-slate-100 font-medium mb-4">
+      Your Email
+    </span>
+    <input
+      type="email"
+      name="email"
+      value={form.email}
+      onChange={handleChange}
+      placeholder="What's your email?"
+      required
+    />
+  </label>
+
+  <label className="flex flex-col">
+    <span className="text-navy-900 dark:text-slate-100 font-medium mb-4">
+      Your Message
+    </span>
+    <textarea
+      rows="7"
+      name="message"
+      value={form.message}
+      onChange={handleChange}
+      placeholder="What do you want to say?"
+      required
+    />
+  </label>
+
+  <button type="submit" disabled={loading}>
+    {loading ? "Sending..." : "Send Message"}
+  </button>
+</form>
+```
+
+## EmailJS Template Setup
+
+In your EmailJS dashboard, create a template with these placeholders:
+
+```html
+Subject: New Contact from {{from_name}}
+
+From: {{from_name}}
+Email: {{from_email}}
+
+Message:
+{{message}}
+```
+
+## Troubleshooting
+
+### Common Issues
+
+<AccordionGroup>
+  <Accordion title="Environment variables not loading">
+    - Ensure your `.env` file is in the project root
+    - Restart your development server after adding environment variables
+    - Check that variable names are prefixed with `VITE_`
+    - Verify the `.env` file is not ignored by `.gitignore`
+  </Accordion>
+
+  <Accordion title="EmailJS returns 'Unauthorized' error">
+    - Verify your Public Key is correct
+    - Check that your EmailJS account is active
+    - Ensure your email service is properly connected
+    - Confirm the Service ID and Template ID match your dashboard
+  </Accordion>
+
+  <Accordion title="Emails not being received">
+    - Check your spam folder
+    - Verify the `to_email` address in your template
+    - Test your template in the EmailJS dashboard
+    - Check EmailJS usage limits for free tier
+  </Accordion>
+
+  <Accordion title="Template variables not showing in email">
+    - Ensure template variable names match exactly (case-sensitive)
+    - Use double curly braces in template: `{{variable_name}}`
+    - Check that you're passing the correct object to `emailjs.send()`
+  </Accordion>
+</AccordionGroup>
+
+### Debug Mode
+
+Add console logs to debug the submission:
+
+```jsx
+emailjs
+  .send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
+  .then((response) => {
+    console.log('SUCCESS!', response.status, response.text);
+  })
+  .catch((error) => {
+    console.log('FAILED...', error);
+  });
+```
+
+## Security Best Practices
+
+<Warning>
+  **Important Security Considerations**
+</Warning>
+
+1. **Environment Variables**: Never hardcode API keys in your source code
+2. **Public Key**: The EmailJS public key is safe to expose on the client-side
+3. **Rate Limiting**: EmailJS automatically rate-limits requests
+4. **Email Validation**: Always validate email format on the client-side
+5. **CAPTCHA**: Consider adding reCAPTCHA for production to prevent spam
+
+## Testing
+
+<Steps>
+  <Step title="Local Testing">
+    Run your development server and submit a test form
+    ```bash
+    npm run dev
+    ```
+  </Step>
+  
+  <Step title="Check EmailJS Dashboard">
+    Monitor your EmailJS dashboard for submission history and errors
+  </Step>
+  
+  <Step title="Verify Email Receipt">
+    Check that you receive the test email in your inbox
+  </Step>
+</Steps>
+
+## Additional Resources
+
+- [EmailJS Documentation](https://www.emailjs.com/docs/)
+- [EmailJS React Examples](https://www.emailjs.com/docs/examples/reactjs/)
+- [EmailJS API Reference](https://www.emailjs.com/docs/sdk/send/)

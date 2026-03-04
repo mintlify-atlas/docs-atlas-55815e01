@@ -1,80 +1,351 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: "Quick Start Guide"
+description: "Get Ritam Saha's portfolio running locally in minutes with this step-by-step setup guide"
 ---
 
-## Get started in three steps
+## Prerequisites
 
-Get your documentation site running locally and make your first customization.
+Before you begin, ensure you have the following installed:
 
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
+- **Node.js** (v16 or higher)
+- **npm** or **yarn** package manager
+- A code editor (VS Code recommended)
+- Git for version control
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  Check your Node.js version with `node --version`. The portfolio was built with Node.js v18+.
 </Note>
+
+## Installation
+
+<Steps>
+
+### Clone the Repository
+
+First, clone the portfolio repository from GitHub:
+
+```bash
+git clone https://github.com/Ritam369/My_Portfolio.git
+cd My_Portfolio
+```
+
+### Install Dependencies
+
+Install all required npm packages:
+
+```bash
+npm install
+```
+
+This will install all dependencies defined in `package.json`, including:
+
+- React 18 and React DOM
+- Vite build tool
+- Tailwind CSS and related plugins
+- Framer Motion for animations
+- EmailJS for contact form
+- React Router DOM for navigation
+- Shadcn/ui components
+- And more...
+
+<Info>
+  The installation may take 1-2 minutes depending on your internet connection.
+</Info>
+
+### Configure Environment Variables
+
+The contact form requires EmailJS credentials. Create a `.env` file in the root directory:
+
+```bash .env
+VITE_SEVICE_ID=your_emailjs_service_id
+VITE_TEMPLATE_ID=your_emailjs_template_id
+VITE_PUBLIC_KEY=your_emailjs_public_key
+```
+
+<Warning>
+  Never commit your `.env` file to version control. It's already included in `.gitignore`.
+</Warning>
+
+#### Getting EmailJS Credentials
+
+1. Visit [EmailJS Dashboard](https://www.emailjs.com/)
+2. Create a free account
+3. Set up an email service (Gmail, Outlook, etc.)
+4. Create an email template with these variables:
+   - `from_name` - Sender's name
+   - `from_email` - Sender's email
+   - `to_name` - Your name (default: "Ritam Saha")
+   - `to_email` - Your email
+   - `message` - Message content
+5. Copy your Service ID, Template ID, and Public Key to `.env`
+
+### Start Development Server
+
+Run the Vite development server:
+
+```bash
+npm run dev
+```
+
+You should see output similar to:
+
+```bash
+  VITE v5.4.1  ready in 1234 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+```
+
+Open your browser and navigate to `http://localhost:5173/` to see the portfolio running.
+
+<Info>
+  Vite provides instant hot module replacement (HMR). Changes to your code will reflect immediately without full page reloads.
+</Info>
+
+</Steps>
+
+## Available Scripts
+
+The portfolio includes several npm scripts for development and production:
+
+### Development
+
+```bash
+npm run dev
+```
+Starts the Vite development server with HMR on `http://localhost:5173/`
+
+### Build for Production
+
+```bash
+npm run build
+```
+Creates an optimized production build in the `dist/` folder with:
+- Minified JavaScript and CSS
+- Tree-shaken dependencies
+- Optimized assets
+- Source maps
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+Locally preview the production build before deployment
+
+### Lint Code
+
+```bash
+npm run lint
+```
+Runs ESLint to check for code quality issues and potential errors
+
+## Configuration Files
+
+Understanding key configuration files:
+
+### Vite Configuration
+
+```javascript vite.config.js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+})
+```
+
+The `@` alias allows importing from `src/` using `@/` prefix:
+
+```javascript
+// Instead of:
+import { Button } from '../../../components/ui/button'
+
+// Use:
+import { Button } from '@/components/ui/button'
+```
+
+### Tailwind Configuration
+
+The `tailwind.config.js` includes custom theme extensions:
+
+```javascript tailwind.config.js
+export default {
+  darkMode: ["class"],
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        navy: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          // ... custom color palette
+          900: '#0f172a',
+        },
+      },
+      animation: {
+        blob: "blob 7s infinite",
+        fadeIn: 'fadeIn 0.5s ease-in',
+      },
+    }
+  },
+  plugins: [require("tailwindcss-animate")],
+}
+```
+
+### Shadcn/ui Configuration
+
+The `components.json` configures Shadcn/ui components:
+
+```json components.json
+{
+  "style": "new-york",
+  "rsc": false,
+  "tsx": false,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "baseColor": "stone",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui"
+  }
+}
+```
+
+## Customization
+
+### Update Personal Information
+
+Edit `src/constants/index.js` to customize the portfolio:
+
+```javascript src/constants/index.js
+const words = [
+  "Software Developer",
+  "Problem Solver",
+  "MERN Stack Developer",
+  "Context-Prompt Engineer",
+];
+
+const socialsData = [
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/in/ritamsaha137",
+    icon: "bx bxl-linkedin"
+  },
+  {
+    name: "GitHub",
+    url: "https://github.com/Ritam369",
+    icon: "bx bxl-github"
+  },
+  // Add more social links...
+];
+
+const navLinks = [
+  { id: "skills", title: "Skills" },
+  { id: "education", title: "Education" },
+  { id: "projects", title: "Projects" },
+  { id: "contact", title: "Contact" },
+];
+
+const services = [
+  {
+    title: "Problem Solving & Algorithms",
+    icon: Computational,
+    description: "Expert in data structures and algorithms..."
+  },
+  // Add more services...
+];
+
+const techStack = [
+  "C", "Java", "html", "css", "js", "nodejs", 
+  "Expressjs", "React", "Tailwind", "Mysql", "Mongodb"
+].map(name => ({
+  name,
+  imageUrl: `https://go-skill-icons.vercel.app/api/icons?i=${name.toLowerCase()}`
+}));
+
+const Email = "ritamsaha75579@gmail.com";
+```
+
+### Modify Theme Colors
+
+Adjust colors in `tailwind.config.js` to match your brand:
+
+```javascript
+colors: {
+  // Change primary color scheme
+  primary: "#0f172a",
+  secondary: "#64748b",
+  tertiary: "#f1f5f9",
+}
+```
+
+### Replace Profile Picture
+
+Replace `public/My_pic.jpg` with your own profile picture. The Hero component will automatically use it:
+
+```jsx src/components/Hero.jsx
+<img 
+  src="My_pic.jpg" 
+  alt="My Picture" 
+  className="relative w-56 sm:w-64 md:w-80 rounded-full..." 
+/>
+```
+
+## Common Issues
+
+### Port Already in Use
+
+If port 5173 is already in use, Vite will automatically try the next available port. You can specify a different port:
+
+```bash
+npm run dev -- --port 3000
+```
+
+### EmailJS Not Working
+
+Verify your `.env` variables are correctly named:
+- `VITE_SEVICE_ID` (note: typo exists in source code)
+- `VITE_TEMPLATE_ID`
+- `VITE_PUBLIC_KEY`
+
+All Vite environment variables must start with `VITE_` prefix.
+
+### Build Errors
+
+Clear the cache and reinstall dependencies:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+npm run build
+```
+
+## Next Steps
+
+Now that your portfolio is running locally:
+
+1. Customize the content in `src/constants/index.js`
+2. Update your profile picture and assets
+3. Configure EmailJS for the contact form
+4. Modify the theme colors to match your brand
+5. Add your projects and work experience
+6. Test on different devices and screen sizes
+7. Build and deploy to production
+
+<Info>
+  The portfolio is optimized for deployment on platforms like Vercel, Netlify, or GitHub Pages.
+</Info>

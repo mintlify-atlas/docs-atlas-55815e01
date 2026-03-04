@@ -1,0 +1,273 @@
+---
+title: Work Component
+description: Work experience section with animated heading and description
+---
+
+The Work component displays professional work experience with a clean, minimal design using animated text and motion effects.
+
+## Overview
+
+This is a simple section component that:
+- Displays section heading with animation
+- Shows introductory text about work experience
+- Uses consistent styling with other sections
+- Wrapped with SectionWrapper HOC
+- Fully supports dark mode
+
+## Component Structure
+
+```jsx Work.jsx
+import React from 'react'
+import { motion } from "framer-motion";
+import { styles } from '@/styles';
+import { SectionWrapper } from '@/hooks';
+import { textVariant } from '@/utils/motion';
+import { Work_page_text } from '@/constants';
+
+function Work() {
+  return (
+    <>
+      <motion.div variants={textVariant(0.2)} className="text-center">
+        <p className={`${styles.sectionSubText} text-teal-400`}>
+          My Journey So Far
+        </p>
+        <h2 className={`${styles.sectionHeadText} text-white`}>
+          Work Experience
+        </h2>
+        <motion.p
+          className="mt-5 text-gray-400 text-[16px]"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          {Work_page_text}
+        </motion.p>
+      </motion.div>
+    </>
+  )
+}
+
+export default SectionWrapper(Work, "work");
+```
+
+## Section Heading
+
+Animated heading using the `textVariant` motion preset:
+
+```jsx
+<motion.div variants={textVariant(0.2)} className="text-center">
+  <p className={`${styles.sectionSubText} text-teal-400`}>
+    My Journey So Far
+  </p>
+  <h2 className={`${styles.sectionHeadText} text-white`}>
+    Work Experience
+  </h2>
+</motion.div>
+```
+
+<Info>
+The `textVariant(0.2)` adds a 0.2s delay before the animation starts.
+</Info>
+
+## Description Text
+
+Separate animation for the description:
+
+```jsx
+<motion.p
+  className="mt-5 text-gray-400 text-[16px]"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+>
+  {Work_page_text}
+</motion.p>
+```
+
+## Text Content Configuration
+
+Define the work experience text in `constants.js`:
+
+```javascript constants.js
+export const Work_page_text = 
+  "I'm currently focused on building my skills and working on 
+  personal projects. I'm actively seeking internship and full-time 
+  opportunities where I can contribute to meaningful projects and 
+  continue learning from experienced developers.";
+```
+
+<Note>
+Customize the `Work_page_text` to reflect your actual work experience or current status.
+</Note>
+
+## SectionWrapper Integration
+
+The component is wrapped with the SectionWrapper HOC:
+
+```javascript
+export default SectionWrapper(Work, "work");
+```
+
+This provides:
+- Section ID: "work" for navigation
+- Consistent padding and margins
+- Scroll-based visibility detection
+- Standard section styling
+
+## Styling Breakdown
+
+<Tabs>
+  <Tab title="Subtitle">
+    ```javascript
+    styles.sectionSubText
+    text-teal-400
+    ```
+    Typically small, uppercase text with tracking
+  </Tab>
+  <Tab title="Heading">
+    ```javascript
+    styles.sectionHeadText
+    text-white
+    ```
+    Large, bold section title
+  </Tab>
+  <Tab title="Description">
+    ```css
+    mt-5 text-gray-400 text-[16px]
+    ```
+    Regular text with muted color
+  </Tab>
+</Tabs>
+
+## Animation Timeline
+
+<Steps>
+  <Step title="Heading Animation">
+    Animates in first with `textVariant` preset
+    - Delay: 0.2s
+    - Includes both subtitle and heading
+  </Step>
+  <Step title="Description Animation">
+    Fades in and slides up independently
+    - Duration: 0.6s
+    - Easing: easeOut
+  </Step>
+</Steps>
+
+## Extending the Component
+
+To add work experience cards or timeline:
+
+```jsx
+function Work() {
+  const experiences = [
+    {
+      title: "Software Developer",
+      company: "Tech Company",
+      duration: "2023 - Present",
+      description: "Working on..."
+    }
+  ];
+
+  return (
+    <>
+      <motion.div variants={textVariant(0.2)} className="text-center">
+        {/* Existing heading code */}
+      </motion.div>
+      
+      {/* Add experience cards */}
+      <div className="mt-12 space-y-8">
+        {experiences.map((exp, index) => (
+          <WorkCard key={index} {...exp} />
+        ))}
+      </div>
+    </>
+  )
+}
+```
+
+## Common Customizations
+
+### Change Colors
+
+```jsx
+// From teal to blue
+<p className={`${styles.sectionSubText} text-blue-400`}>
+
+// From white to custom
+<h2 className={`${styles.sectionHeadText} text-navy-900 dark:text-slate-100`}>
+```
+
+### Add Work Experience Cards
+
+Create a separate WorkCard component:
+
+```jsx WorkCard.jsx
+const WorkCard = ({ title, company, duration, description }) => (
+  <motion.div
+    initial={{ opacity: 0, x: -50 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true }}
+    className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg"
+  >
+    <h3 className="text-xl font-bold">{title}</h3>
+    <p className="text-gray-600">{company}</p>
+    <p className="text-sm text-gray-400">{duration}</p>
+    <p className="mt-4">{description}</p>
+  </motion.div>
+);
+```
+
+### Add Timeline
+
+Similar to the Education component:
+
+```jsx
+<div className="relative">
+  {/* Vertical line */}
+  <div className="absolute left-0 top-0 bottom-0 w-0.5 
+    bg-gradient-to-b from-teal-500 to-transparent" />
+  
+  {/* Experience items */}
+  {experiences.map((exp, index) => (
+    <WorkCard key={index} {...exp} />
+  ))}
+</div>
+```
+
+## Text Variant Details
+
+The `textVariant` utility from `utils/motion.js`:
+
+```javascript
+export const textVariant = (delay) => ({
+  hidden: {
+    y: -50,
+    opacity: 0,
+  },
+  show: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      duration: 1.25,
+      delay: delay,
+    },
+  },
+});
+```
+
+## Accessibility
+
+- Semantic HTML structure
+- Proper heading hierarchy (h2)
+- Text contrast meets WCAG standards
+- Motion respects `prefers-reduced-motion`
+
+## Dependencies
+
+- `framer-motion` - Animation library
+- `@/styles` - Shared style constants
+- `@/hooks` - SectionWrapper HOC
+- `@/utils/motion` - Animation variants
+- `@/constants` - Content text

@@ -1,0 +1,301 @@
+---
+title: Skills Component
+description: Technology stack showcase with animated skill icons in a responsive grid
+---
+
+The Skills component displays technical proficiencies through animated icons arranged in a flexible grid layout.
+
+## Overview
+
+Key features:
+- Animated icon grid with staggered entrance
+- Hover effects with scale transformation
+- Circular icon containers with gradient backgrounds
+- Responsive grid that adapts to screen size
+- Dark mode support
+
+## Component Structure
+
+```jsx Skills.jsx
+import React from 'react'
+import { motion } from 'framer-motion'
+import { techStack } from '@/constants'
+import { styles } from '@/styles'
+import { SectionWrapper } from '@/hooks'
+
+function Skills() {
+  return (
+    <div className='bg-white/50 dark:bg-zinc-950/30 
+      backdrop-blur-sm py-16 transition-colors duration-300'>
+      <div className="text-center mb-12">
+        <p className={`${styles.sectionSubText} 
+          text-navy-600 dark:text-slate-400`}>
+          Technical Proficiency
+        </p>
+        <h2 className={`${styles.sectionHeadText} 
+          text-navy-900 dark:text-slate-100`}>
+          Skills.
+        </h2>
+      </div>
+      
+      <div className='flex justify-center lg:px-40 md:px-12 px-14 pb-8'>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className='flex flex-wrap justify-center gap-8 max-w-7xl'
+        >
+          {techStack.map((skill, index) => (
+            <motion.div
+              className='aspect-square w-[85px] h-[85px] 
+                bg-white/90 dark:bg-slate-800/90 rounded-full 
+                flex items-center justify-center backdrop-blur-sm 
+                hover:bg-navy-50 dark:hover:bg-slate-700 
+                transition-colors group shadow-lg 
+                border border-navy-200 dark:border-slate-600 
+                hover:border-navy-400 dark:hover:border-slate-500'
+              key={skill.name}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.5, delay: index * 0.15 }}
+              whileHover={{ scale: 1.1 }}
+            >
+              <img
+                src={skill.imageUrl}
+                alt={skill.name}
+                className='w-14 h-14 object-contain 
+                  group-hover:scale-110 transition-transform'
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </div>
+  )
+}
+
+export default SectionWrapper(Skills, "skills");
+```
+
+## Skill Icon Design
+
+Each skill is displayed in a circular container:
+
+```jsx
+<motion.div
+  className='aspect-square w-[85px] h-[85px] 
+    bg-white/90 dark:bg-slate-800/90 rounded-full 
+    flex items-center justify-center backdrop-blur-sm 
+    hover:bg-navy-50 dark:hover:bg-slate-700 
+    transition-colors group shadow-lg 
+    border border-navy-200 dark:border-slate-600 
+    hover:border-navy-400 dark:hover:border-slate-500'
+  key={skill.name}
+  initial={{ opacity: 0, scale: 0.8 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 1.5, delay: index * 0.15 }}
+  whileHover={{ scale: 1.1 }}
+>
+  <img
+    src={skill.imageUrl}
+    alt={skill.name}
+    className='w-14 h-14 object-contain 
+      group-hover:scale-110 transition-transform'
+  />
+</motion.div>
+```
+
+<Info>
+The icons animate in with a staggered 0.15s delay between each, creating a wave effect.
+</Info>
+
+## Animation Breakdown
+
+### Container Animation
+
+```javascript
+initial={{ opacity: 0, y: 20 }}
+animate={{ opacity: 1, y: 0 }}
+```
+
+### Individual Icon Animation
+
+```javascript
+initial={{ opacity: 0, scale: 0.8 }}
+animate={{ opacity: 1, scale: 1 }}
+transition={{ duration: 1.5, delay: index * 0.15 }}
+```
+
+### Hover Effects
+
+```javascript
+whileHover={{ scale: 1.1 }}
+
+// Icon scales even more on hover
+group-hover:scale-110
+```
+
+## Tech Stack Data Structure
+
+Define your tech stack in `constants.js`:
+
+```javascript constants.js
+export const techStack = [
+  {
+    name: "React",
+    imageUrl: "/tech/react.png"
+  },
+  {
+    name: "Node.js",
+    imageUrl: "/tech/nodejs.png"
+  },
+  {
+    name: "MongoDB",
+    imageUrl: "/tech/mongodb.png"
+  },
+  {
+    name: "Express",
+    imageUrl: "/tech/express.png"
+  },
+  {
+    name: "JavaScript",
+    imageUrl: "/tech/javascript.png"
+  },
+  {
+    name: "TypeScript",
+    imageUrl: "/tech/typescript.png"
+  },
+  {
+    name: "Tailwind CSS",
+    imageUrl: "/tech/tailwind.png"
+  },
+  {
+    name: "Git",
+    imageUrl: "/tech/git.png"
+  },
+  // Add more skills...
+];
+```
+
+<Note>
+Ensure skill images are square (1:1 aspect ratio) for best results.
+</Note>
+
+## Responsive Padding
+
+Padding adjusts based on screen size:
+
+<Tabs>
+  <Tab title="Mobile">
+    ```css
+    px-14
+    ```
+  </Tab>
+  <Tab title="Tablet">
+    ```css
+    md:px-12
+    ```
+  </Tab>
+  <Tab title="Desktop">
+    ```css
+    lg:px-40
+    ```
+  </Tab>
+</Tabs>
+
+## Grid Behavior
+
+The flex-wrap layout automatically adjusts:
+
+```jsx
+<div className='flex flex-wrap justify-center gap-8 max-w-7xl'>
+  {/* Skills */}
+</div>
+```
+
+- Icons wrap to new rows as needed
+- 8 unit gap between items
+- Maximum width of 7xl
+- Center aligned
+
+## Icon Container Styling
+
+<CardGroup cols={2}>
+  <Card title="Default State">
+    - 85x85px circular container
+    - White/slate background with transparency
+    - Subtle shadow
+    - Navy/slate border
+  </Card>
+  <Card title="Hover State">
+    - Scales to 110% (container)
+    - Icon scales to 110% (nested)
+    - Border color intensifies
+    - Background color changes
+  </Card>
+</CardGroup>
+
+## Dark Mode Comparison
+
+<CodeGroup>
+```css Light Mode
+bg-white/90
+text-navy-600
+border-navy-200
+hover:bg-navy-50
+hover:border-navy-400
+```
+
+```css Dark Mode
+dark:bg-slate-800/90
+dark:text-slate-400
+dark:border-slate-600
+dark:hover:bg-slate-700
+dark:hover:border-slate-500
+```
+</CodeGroup>
+
+## Section Styles
+
+The component uses predefined styles from `styles.js`:
+
+```javascript
+styles.sectionSubText  // "Technical Proficiency"
+styles.sectionHeadText // "Skills."
+```
+
+Typical definitions:
+
+```javascript styles.js
+export const styles = {
+  sectionSubText: "text-sm uppercase tracking-wider mb-3 font-semibold",
+  sectionHeadText: "text-4xl md:text-5xl lg:text-6xl font-black mb-6",
+};
+```
+
+## Performance Considerations
+
+- Uses `transform` for animations (GPU accelerated)
+- Staggered animations prevent layout shift
+- `backdrop-blur-sm` provides subtle depth
+- Image lazy loading recommended for many icons
+
+## Customization Options
+
+### Adjust Icon Size
+
+```jsx
+w-[85px] h-[85px]  // Container
+w-14 h-14           // Icon
+```
+
+### Change Animation Duration
+
+```jsx
+transition={{ duration: 1.5, delay: index * 0.15 }}
+```
+
+### Modify Gap Between Icons
+
+```jsx
+gap-8  // Change to gap-6, gap-10, etc.
+```

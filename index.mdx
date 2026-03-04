@@ -1,97 +1,201 @@
----
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
----
+<div className="relative w-full min-h-[600px] overflow-hidden bg-gradient-to-br from-[#0F1117] via-[#1a1d27] to-[#0F1117] dark:from-[#0F1117] dark:via-[#1a1d27] dark:to-[#0F1117] py-20 px-6">
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(59,130,246,0.08),transparent_50%)]" />
+  
+  <div className="relative max-w-6xl mx-auto">
+    <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+      <div className="flex flex-col space-y-6 max-w-2xl">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white dark:text-white animate-fade-in">
+          Ritam Saha Portfolio<br />
+          <span className="text-[#3B82F6] dark:text-[#3B82F6]">Documentation</span>
+        </h1>
+        
+        <p className="text-base sm:text-lg text-gray-300 dark:text-gray-300 max-w-xl">
+          Build a modern, responsive portfolio website with React, Vite, Tailwind CSS, and Framer Motion. Features dark mode, smooth animations, and interactive components.
+        </p>
+        
+        <div className="flex flex-wrap gap-4">
+          <a 
+            href="/quickstart" 
+            className="inline-flex items-center px-6 py-3 rounded-full bg-[#040404] dark:bg-[#040404] text-white dark:text-white font-semibold hover:bg-[#1a1a1a] dark:hover:bg-[#1a1a1a] transition-colors"
+          >
+            Get Started
+          </a>
+          <a 
+            href="/components/overview" 
+            className="inline-flex items-center px-6 py-3 rounded-full border border-white/30 dark:border-white/30 bg-white/10 dark:bg-white/10 text-white dark:text-white font-semibold hover:bg-white/20 dark:hover:bg-white/20 transition-colors"
+          >
+            Explore Components
+          </a>
+        </div>
+      </div>
+      
+      <div className="flex-shrink-0">
+        <div className="w-full max-w-md lg:max-w-lg">
+          <img 
+            src="/logo.png" 
+            alt="Ritam Saha Portfolio" 
+            noZoom
+            className="w-full h-auto rounded-2xl shadow-2xl"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-## Setting up
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    Quick start
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Get your portfolio up and running in minutes
+  </p>
+  
+  <Steps>
+    <Step title="Clone the repository">
+      Clone the portfolio repository to your local machine:
+      
+      ```bash
+      git clone https://github.com/Ritam369/My_Portfolio.git
+      cd My_Portfolio
+      ```
+    </Step>
+    
+    <Step title="Install dependencies">
+      Install all required packages using npm:
+      
+      ```bash
+      npm install
+      ```
+      
+      This installs React, Vite, Tailwind CSS, Framer Motion, Shadcn/ui, and all other dependencies.
+    </Step>
+    
+    <Step title="Configure environment variables">
+      Create a `.env` file in the root directory and add your EmailJS credentials:
+      
+      ```env
+      VITE_EMAILJS_SERVICE_ID=your_service_id
+      VITE_EMAILJS_TEMPLATE_ID=your_template_id
+      VITE_EMAILJS_PUBLIC_KEY=your_public_key
+      ```
+      
+      Get your credentials from [EmailJS Dashboard](https://www.emailjs.com/).
+    </Step>
+    
+    <Step title="Start the development server">
+      Run the development server:
+      
+      ```bash
+      npm run dev
+      ```
+      
+      Your portfolio will be available at `http://localhost:5173`.
+    </Step>
+  </Steps>
+</div>
 
-Get your documentation site up and running in minutes.
-
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    Explore components
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Discover the building blocks of your portfolio
+  </p>
+  
+  <CardGroup cols={2}>
     <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+      title="Hero section"
+      icon="star"
+      href="/components/hero"
+    >
+      Landing section with typewriter effect and animated introduction
+    </Card>
+    <Card
+      title="Navigation bar"
+      icon="bars"
+      href="/components/navbar"
+    >
+      Responsive navbar with mobile menu and smooth scroll navigation
+    </Card>
+    <Card
+      title="Skills showcase"
+      icon="code"
+      href="/components/skills"
+    >
+      Display your tech stack with animated icons and hover effects
+    </Card>
+    <Card
+      title="Projects gallery"
+      icon="folder-open"
+      href="/components/projects"
+    >
+      Showcase your projects with interactive cards and details
+    </Card>
+    <Card
+      title="Contact form"
+      icon="envelope"
+      href="/components/contact"
+    >
+      Functional contact form with EmailJS integration
+    </Card>
+    <Card
+      title="Theme toggle"
+      icon="moon"
+      href="/components/theme-toggle"
+    >
+      Dark/light mode toggle with smooth transitions
+    </Card>
+  </CardGroup>
+</div>
 
-## Create beautiful pages
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    Customization guides
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Make the portfolio your own
+  </p>
+  
+  <CardGroup cols={3}>
+    <Card
+      title="Theme customization"
+      icon="palette"
+      href="/customization/theme"
+    >
+      Customize colors, fonts, and theme behavior
+    </Card>
+    <Card
+      title="Styling guide"
+      icon="paintbrush"
+      href="/customization/styling"
+    >
+      Update Tailwind config and component styles
+    </Card>
+    <Card
+      title="Content management"
+      icon="file-edit"
+      href="/customization/content"
+    >
+      Update personal info, projects, and services
+    </Card>
+  </CardGroup>
+</div>
 
-Everything you need to create world-class documentation.
-
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="rounded-2xl border border-gray-200 dark:border-[#27272a] bg-gray-50 dark:bg-[#1a1d27] p-8">
+    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+      Ready to build your portfolio?
+    </h2>
+    <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+      Follow our quickstart guide to get up and running in minutes, or explore the component documentation to learn how to customize every aspect of your portfolio.
+    </p>
+    <a 
+      href="/quickstart" 
+      className="inline-flex items-center px-6 py-3 rounded-full bg-[#040404] dark:bg-[#040404] text-white dark:text-white font-semibold hover:bg-[#1a1a1a] dark:hover:bg-[#1a1a1a] transition-colors"
+    >
+      Get Started Now
+    </a>
+  </div>
+</div>

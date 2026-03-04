@@ -1,0 +1,286 @@
+---
+title: Navbar Component
+description: Fixed navigation bar with smooth scrolling, mobile menu, and dynamic styling
+---
+
+The Navbar component provides persistent navigation across the portfolio with smooth scrolling, responsive mobile menu, and dynamic background effects based on scroll position.
+
+## Overview
+
+Key features:
+- Fixed positioning with scroll-based styling changes
+- Desktop horizontal navigation with hover effects
+- Mobile hamburger menu with slide-out panel
+- Smooth scroll to sections with offset
+- Active link tracking
+- Logo animation on hover
+
+## Component Structure
+
+```jsx Navbar.jsx
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { styles } from "../styles";
+import { navLinks } from "../constants";
+import { menu, close } from "../assets";
+
+const Navbar = () => {
+  const [active, setActive] = useState("");
+  const [toggle, setToggle] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setScrolled(scrollTop > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <motion.nav
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
+      className={`fixed top-0 z-50 w-full transition-all duration-300`}
+    >
+      {/* Navigation content */}
+    </motion.nav>
+  );
+};
+```
+
+## Scroll-Based Styling
+
+The navbar changes appearance when scrolled past 100px:
+
+```jsx
+const [scrolled, setScrolled] = useState(false);
+
+useEffect(() => {
+  const handleScroll = () => {
+    const scrollTop = window.scrollY;
+    setScrolled(scrollTop > 100);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+```
+
+<Tabs>
+  <Tab title="Not Scrolled">
+    ```css
+    bg-white/80 dark:bg-zinc-950/0
+    backdrop-blur-sm
+    ```
+    Transparent with minimal blur for clean appearance
+  </Tab>
+  <Tab title="Scrolled">
+    ```css
+    bg-white/95 dark:bg-zinc-950/95
+    backdrop-blur-md
+    shadow-lg shadow-navy-100/20
+    border-b border-navy-100
+    ```
+    Solid background with shadow for better visibility
+  </Tab>
+</Tabs>
+
+## Smooth Scrolling Function
+
+Custom scroll function with offset for fixed navbar:
+
+```javascript
+const scrollToSection = (sectionId) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    const yOffset = -80; // Offset for fixed navbar
+    const y = element.getBoundingClientRect().top + 
+              window.pageYOffset + yOffset;
+    
+    window.scrollTo({
+      top: y,
+      behavior: 'smooth'
+    });
+  }
+};
+```
+
+<Info>
+The -80px offset ensures section headings aren't hidden behind the fixed navbar.
+</Info>
+
+## Logo with Animation
+
+```jsx
+<Link to="/" className="flex items-center gap-2">
+  <motion.img
+    src='/logo.png'
+    alt="logo"
+    className="w-9 h-9 object-contain mr-5"
+    whileHover={{ scale: 1.2, rotate: 360 }}
+    transition={{ duration: 0.5 }}
+  />
+  <motion.p
+    className="text-navy-900 dark:text-slate-100 text-[18px] font-bold"
+    whileHover={{ scale: 1.05 }}
+  >
+    <span className="logo text-3xl font-bold" style={{ color: '#0e172b' }}>
+      Ritam Saha
+    </span>
+  </motion.p> 
+</Link>
+```
+
+## Desktop Navigation
+
+Horizontal menu with underline hover effect:
+
+```jsx
+<ul className="list-none hidden sm:flex flex-row gap-10">
+  {navLinks.map((nav) => (
+    <motion.li
+      key={nav.id}
+      className={`${
+        active === nav.title 
+          ? "text-navy-800 dark:text-slate-200" 
+          : "text-navy-600 dark:text-slate-400"
+      } text-[18px] font-medium cursor-pointer relative group`}
+      whileHover={{ scale: 1.05 }}
+      onClick={() => {
+        setActive(nav.title);
+        scrollToSection(nav.id);
+      }}
+    >
+      <span className="relative">
+        {nav.title}
+        <span className="absolute -bottom-1 left-0 w-full h-0.5 
+          bg-gradient-to-r from-navy-600 to-navy-800 
+          dark:from-slate-400 dark:to-slate-200 
+          transform scale-x-0 transition-transform duration-300 
+          origin-left group-hover:scale-x-100" />
+      </span>
+    </motion.li>
+  ))}
+</ul>
+```
+
+<Note>
+The animated underline uses CSS transform for smooth performance.
+</Note>
+
+## Mobile Menu
+
+Hamburger menu with animated slide-out panel:
+
+```jsx
+<div className="sm:hidden flex flex-1 justify-end items-center">
+  {/* Hamburger button */}
+  <motion.div
+    whileHover={{ scale: 1.1 }}
+    whileTap={{ scale: 0.9 }}
+    onClick={() => setToggle(!toggle)}
+    className="w-10 h-10 rounded-full bg-gradient-to-r 
+      from-navy-100 to-navy-200 dark:from-slate-700 dark:to-slate-600 
+      flex items-center justify-center cursor-pointer"
+  >
+    <img
+      src={toggle ? close : menu}
+      alt="menu"
+      className="w-[23px] h-[23px] object-contain"
+    />
+  </motion.div>
+
+  {/* Slide-out menu */}
+  <AnimatePresence>
+    {toggle && (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: -20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: -20 }}
+        transition={{ duration: 0.2 }}
+        className="p-6 bg-white/95 dark:bg-zinc-900/95 
+          backdrop-blur-lg absolute top-20 right-0 mx-4 my-2 
+          min-w-[140px] z-10 rounded-xl"
+      >
+        <ul className="list-none flex flex-col gap-4">
+          {navLinks.map((nav) => (
+            <motion.li
+              key={nav.id}
+              whileHover={{ x: 5 }}
+              onClick={() => {
+                setToggle(!toggle);
+                setActive(nav.title);
+                scrollToSection(nav.id);
+              }}
+            >
+              <span className="block w-full p-2 rounded-lg 
+                hover:bg-navy-50 dark:hover:bg-slate-700">
+                {nav.title}
+              </span>
+            </motion.li>
+          ))}
+        </ul>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
+```
+
+## Navigation Links Configuration
+
+Define links in `constants.js`:
+
+```javascript constants.js
+export const navLinks = [
+  { id: "about", title: "About" },
+  { id: "skills", title: "Skills" },
+  { id: "education", title: "Education" },
+  { id: "projects", title: "Projects" },
+  { id: "work", title: "Work" },
+  { id: "contact", title: "Contact" },
+];
+```
+
+## Active Link Tracking
+
+The component tracks which section is active:
+
+```javascript
+const [active, setActive] = useState("");
+
+// Update on click
+setActive(nav.title);
+```
+
+## Responsive Breakpoints
+
+<CardGroup cols={2}>
+  <Card title="Mobile (< 640px)">
+    - Hamburger menu
+    - Slide-out panel
+    - Stacked links
+  </Card>
+  <Card title="Desktop (≥ 640px)">
+    - Horizontal menu
+    - Inline links
+    - Hover effects
+  </Card>
+</CardGroup>
+
+## Accessibility Features
+
+- Semantic HTML with `<nav>` element
+- Keyboard navigation support
+- Focus states on interactive elements
+- ARIA labels on menu button
+
+## Dependencies
+
+- `framer-motion` - Animations and transitions
+- `react-router-dom` - Link component
+- `@/constants` - Navigation links data

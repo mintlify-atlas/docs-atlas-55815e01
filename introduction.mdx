@@ -1,0 +1,199 @@
+---
+title: "Introduction"
+description: "Learn about Ritam Saha's modern React portfolio showcasing software development skills, competitive programming experience, and AI expertise"
+---
+
+## Overview
+
+Ritam Saha's Portfolio is a modern, responsive single-page application built with React 18 and Vite. The portfolio showcases his journey as a **Computational Problem Solver**, **Competitive Programmer**, **Prompt Engineer**, and **Software Engineer**.
+
+This documentation will guide you through understanding the project structure, setting up the development environment, and customizing the portfolio for your own use.
+
+<Info>
+  Visit the live portfolio at [ritamsaha.me](https://www.ritamsaha.me/)
+</Info>
+
+## Key Features
+
+The portfolio includes several modern web development features:
+
+### Interactive UI
+- **Dark Mode Toggle** - Smooth theme transitions with persistent localStorage state
+- **Responsive Design** - Mobile-first approach optimized for all screen sizes
+- **Smooth Animations** - Framer Motion powered scroll-triggered effects
+- **Parallax Effects** - Interactive tilt effects using react-parallax-tilt
+
+### Dynamic Content
+- **Typewriter Effect** - Animated text in the hero section cycling through roles:
+  - Software Developer
+  - Problem Solver
+  - MERN Stack Developer
+  - Context-Prompt Engineer
+- **Skills Showcase** - Dynamic skill icons with hover effects
+- **Project Cards** - Interactive project showcases with details
+- **Education Timeline** - Animated timeline of academic journey
+
+### Functional Components
+- **Contact Form** - EmailJS integration for direct messaging
+- **Social Dock** - Quick access to social profiles (LinkedIn, GitHub, Twitter)
+- **Particle Background** - Animated background effects
+- **Navigation Bar** - Smooth scroll navigation with mobile menu
+
+## Tech Stack
+
+The portfolio is built with modern web technologies:
+
+### Core Framework
+```json
+{
+  "react": "^18.3.1",
+  "react-dom": "^18.3.1",
+  "vite": "^5.4.1"
+}
+```
+
+### Styling & UI
+- **Tailwind CSS** `^3.4.13` - Utility-first CSS framework
+- **Shadcn/ui** - Beautiful, accessible UI components (New York style)
+- **Framer Motion** `^11.11.9` - Animation library
+- **Class Variance Authority** - Component variant management
+- **Tailwind Animate** - Additional animation utilities
+
+### Libraries & Tools
+- **React Router DOM** `^6.26.2` - Client-side routing
+- **@emailjs/browser** `^4.4.1` - Contact form functionality
+- **React Icons** `^5.3.0` & **Lucide React** `^0.447.0` - Icon libraries
+- **React Parallax Tilt** `^1.7.248` - 3D tilt effects
+
+### Development Tools
+- **ESLint** `^9.9.0` - Code linting with React plugins
+- **PostCSS** `^8.4.47` - CSS processing
+- **Autoprefixer** `^10.4.20` - Vendor prefixing
+
+<Note>
+  The project uses Vite for lightning-fast hot module replacement (HMR) during development.
+</Note>
+
+## Project Structure
+
+The portfolio follows a clean, organized structure:
+
+```
+My_Portfolio/
+├── public/                 # Static assets
+│   ├── logo.png           # Portfolio logo
+│   ├── My_pic.jpg         # Profile picture
+│   └── vite.svg           # Vite icon
+├── src/
+│   ├── components/        # React components
+│   │   ├── About.jsx      # About section
+│   │   ├── Contact.jsx    # Contact form with EmailJS
+│   │   ├── Education.jsx  # Education timeline
+│   │   ├── Hero.jsx       # Hero section with typewriter
+│   │   ├── Navbar.jsx     # Navigation bar
+│   │   ├── Projects.jsx   # Projects showcase
+│   │   ├── Skills.jsx     # Skills display
+│   │   ├── ThemeToggle.jsx # Dark/light mode toggle
+│   │   └── ui/           # Shadcn UI components
+│   ├── assets/           # Images and icons
+│   ├── constants/        # Configuration and data
+│   │   └── index.js      # Navigation, socials, services
+│   ├── contexts/         # React contexts
+│   │   └── ThemeContext.jsx # Theme management
+│   ├── hooks/            # Custom hooks
+│   │   └── SectionWrapper.jsx # HOC for sections
+│   ├── lib/              # Utilities
+│   │   └── utils.js      # Helper functions
+│   ├── utils/            # Utility functions
+│   │   ├── motion.js     # Animation variants
+│   │   └── styles.js     # Common styles
+│   ├── App.jsx           # Main component
+│   ├── main.jsx          # Entry point
+│   └── index.css         # Global styles
+├── .env                   # Environment variables
+├── components.json        # Shadcn configuration
+├── tailwind.config.js     # Tailwind configuration
+├── vite.config.js         # Vite configuration
+└── package.json           # Dependencies
+```
+
+## Architecture Highlights
+
+### Theme Management
+
+The portfolio implements a custom theme context with localStorage persistence:
+
+```jsx
+// src/contexts/ThemeContext.jsx
+export const ThemeProvider = ({ children }) => {
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved ? saved === 'dark' : true; // Default to dark
+  });
+
+  useEffect(() => {
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', isDark);
+  }, [isDark]);
+
+  const toggleTheme = () => setIsDark(!isDark);
+
+  return (
+    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+```
+
+### Path Aliases
+
+The project uses `@` alias for cleaner imports:
+
+```javascript
+// vite.config.js
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+})
+```
+
+### Component Structure
+
+Main App component wraps everything with theme and routing:
+
+```jsx
+// src/App.jsx
+function App() {
+  return (
+    <ThemeProvider>
+      <BrowserRouter>
+        <div className='relative z-0 bg-gradient-to-br from-slate-50 to-blue-50 
+                        dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950'>
+          <ParticleBackground />
+          <div className='relative min-h-screen'>
+            <Hero/>
+          </div>
+          <div className="relative">
+            <Skills/>
+            <Education/>
+            <Projects/>
+            <Contact/>
+          </div>
+        </div>
+        <Navbar />
+        <ThemeToggle />
+        <SocialDock />
+      </BrowserRouter>
+    </ThemeProvider>
+  )
+}
+```
+
+## What's Next?
+
+Now that you understand the portfolio's architecture and features, proceed to the [Quickstart Guide](/quickstart) to set up your local development environment.
