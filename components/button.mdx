@@ -1,0 +1,281 @@
+---
+title: Button component
+description: Shadcn/ui button component with variants and sizes for consistent UI interactions
+---
+
+The Button component is a reusable Shadcn/ui component that provides consistent styling and behavior for all interactive buttons throughout the portfolio.
+
+## Overview
+
+Located at `src/components/ui/button.jsx`, this component uses `class-variance-authority` for variant management and provides multiple styles and sizes.
+
+## Component Structure
+
+```jsx src/components/ui/button.jsx
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva } from "class-variance-authority";
+import { cn } from "@/lib/utils"
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+
+const Button = React.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button"
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size, className }))}
+      ref={ref}
+      {...props}
+    />
+  );
+})
+Button.displayName = "Button"
+
+export { Button, buttonVariants }
+```
+
+## Props
+
+<ParamField path="variant" type="string" default="default">
+  Button style variant:
+  - `default` - Primary button with solid background
+  - `destructive` - Destructive action button (red)
+  - `outline` - Outlined button with transparent background
+  - `secondary` - Secondary button with muted background
+  - `ghost` - Minimal button with no background
+  - `link` - Text link styled as button
+</ParamField>
+
+<ParamField path="size" type="string" default="default">
+  Button size:
+  - `default` - Standard size (h-9)
+  - `sm` - Small size (h-8)
+  - `lg` - Large size (h-10)
+  - `icon` - Square size for icon-only buttons (h-9 w-9)
+</ParamField>
+
+<ParamField path="asChild" type="boolean" default={false}>
+  When true, renders the button using Radix UI Slot for composition
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply
+</ParamField>
+
+## Usage Examples
+
+### Default Button
+
+```jsx
+import { Button } from "@/components/ui/button"
+
+<Button>Click me</Button>
+```
+
+### Variant Examples
+
+<Tabs>
+  <Tab title="Primary">
+    ```jsx
+    <Button variant="default">
+      Primary Action
+    </Button>
+    ```
+  </Tab>
+  
+  <Tab title="Outline">
+    ```jsx
+    <Button variant="outline">
+      Secondary Action
+    </Button>
+    ```
+  </Tab>
+  
+  <Tab title="Ghost">
+    ```jsx
+    <Button variant="ghost">
+      Subtle Action
+    </Button>
+    ```
+  </Tab>
+  
+  <Tab title="Link">
+    ```jsx
+    <Button variant="link">
+      Text Link
+    </Button>
+    ```
+  </Tab>
+</Tabs>
+
+### Size Examples
+
+```jsx
+<Button size="sm">Small Button</Button>
+<Button size="default">Default Button</Button>
+<Button size="lg">Large Button</Button>
+<Button size="icon">
+  <IconComponent />
+</Button>
+```
+
+### With Icons
+
+```jsx
+import { Download } from "lucide-react"
+
+<Button>
+  <Download className="mr-2 h-4 w-4" />
+  Download
+</Button>
+```
+
+### As Link
+
+```jsx
+<Button asChild>
+  <a href="/components/contact">Contact Me</a>
+</Button>
+```
+
+## Styling Details
+
+### Base Styles
+
+All buttons include:
+- Flexbox layout for content alignment
+- Smooth color transitions
+- Focus ring for accessibility
+- Disabled state styling
+- Rounded corners
+
+### Variant Styles
+
+Each variant uses Tailwind's design tokens:
+- `default` - Uses primary color from theme
+- `destructive` - Red color for dangerous actions
+- `outline` - Border with transparent background
+- `secondary` - Muted secondary color
+- `ghost` - Minimal hover effect only
+- `link` - Underlined text on hover
+
+### Dark Mode
+
+The button automatically adapts to dark mode through Tailwind's design tokens:
+
+```css
+/* Light mode */
+.bg-primary { background-color: hsl(var(--primary)) }
+
+/* Dark mode */
+.dark .bg-primary { background-color: hsl(var(--primary)) }
+```
+
+## Dependencies
+
+<CardGroup cols={2}>
+  <Card title="Radix UI Slot" icon="box" href="https://www.radix-ui.com/primitives/docs/utilities/slot">
+    Composition primitive for flexible rendering
+  </Card>
+  <Card title="Class Variance Authority" icon="palette" href="https://cva.style/docs">
+    Type-safe variant management
+  </Card>
+  <Card title="Tailwind Merge" icon="merge" href="https://github.com/dcastil/tailwind-merge">
+    Utility for merging Tailwind classes
+  </Card>
+</CardGroup>
+
+## Customization
+
+### Adding New Variants
+
+Extend the `buttonVariants` cva configuration:
+
+```jsx
+const buttonVariants = cva(
+  // base styles
+  "...",
+  {
+    variants: {
+      variant: {
+        default: "...",
+        // Add custom variant
+        custom: "bg-purple-600 text-white hover:bg-purple-700",
+      },
+      size: {
+        // Add custom size
+        xl: "h-12 px-10 text-base",
+      },
+    },
+  }
+)
+```
+
+### Modifying Theme Colors
+
+Update the color tokens in your Tailwind config or CSS variables:
+
+```css
+:root {
+  --primary: 210 100% 50%;
+  --primary-foreground: 0 0% 100%;
+}
+
+.dark {
+  --primary: 210 100% 60%;
+  --primary-foreground: 0 0% 100%;
+}
+```
+
+## Accessibility
+
+The button component includes:
+- Semantic `<button>` element
+- Focus visible ring for keyboard navigation
+- Disabled state that removes pointer events
+- Proper ARIA attributes when needed
+
+```jsx
+<Button disabled>
+  Disabled Button
+</Button>
+
+<Button aria-label="Close dialog">
+  ×
+</Button>
+```
+
+## Related Components
+
+<CardGroup cols={2}>
+  <Card title="Theme Toggle" icon="moon" href="/components/theme-toggle">
+    Uses button for theme switching
+  </Card>
+  <Card title="Contact Form" icon="envelope" href="/components/contact">
+    Submit button implementation
+  </Card>
+</CardGroup>

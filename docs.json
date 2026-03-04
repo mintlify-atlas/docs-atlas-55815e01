@@ -47,7 +47,8 @@
           "components/work",
           "components/contact",
           "components/theme-toggle",
-          "components/social-dock"
+          "components/social-dock",
+          "components/button"
         ]
       },
       {
